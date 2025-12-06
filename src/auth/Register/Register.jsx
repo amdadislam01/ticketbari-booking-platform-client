@@ -54,7 +54,6 @@ const Register = () => {
 
         axios.post(imageAPI, formData).then((res) => {
           const photoURL = res.data.data.url;
-
           const userInfo = {
             email: data.email,
             displayName: data.name,
@@ -123,7 +122,7 @@ const Register = () => {
           isDarkMode ? "bg-gray-800 text-gray-100" : "bg-white text-gray-800"
         }`}
       >
-        {/* Info  */}
+        {/*  Info  */}
         <div
           className={`hidden md:flex flex-col justify-center items-center p-10 space-y-6 transition-all duration-500 ${
             isDarkMode
@@ -210,7 +209,7 @@ const Register = () => {
                 <span className="text-red-500 text-sm">Name is required</span>
               )}
             </div>
-              {/* Photo */}
+            {/* Photo */}
             <div>
               <label className="block mb-1 font-medium">Photo</label>
               <div
@@ -243,7 +242,7 @@ const Register = () => {
                 <span className="text-red-500 text-sm">Photo is required</span>
               )}
             </div>
-              {/* Email */}
+            {/* Email */}
             <div>
               <label className="block mb-1 font-medium">Email</label>
               <div
@@ -267,7 +266,7 @@ const Register = () => {
                 <span className="text-red-500 text-sm">Email is required</span>
               )}
             </div>
-              {/* Password */}
+            {/* Password */}
             <div>
               <label className="block mb-1 font-medium">Password</label>
               <div
@@ -312,7 +311,7 @@ const Register = () => {
             >
               <FaUserPlus /> Register
             </button>
-              {/* Google */}
+            {/* Google */}
             <div className="w-full flex items-center justify-center mt-4">
               <button
                 type="button"

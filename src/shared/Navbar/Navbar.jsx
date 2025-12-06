@@ -7,6 +7,8 @@ import UseAuth from "../../hooks/UseAuth";
 
 const Navbar = () => {
   const { user, logoutUser } = UseAuth();
+  console.log(user);
+  
   const { isDarkMode, toggleTheme } = useTheme();
   const [menuOpen, setMenuOpen] = useState(false);
   const [profileMenu, setProfileMenu] = useState(false);
@@ -83,7 +85,6 @@ const Navbar = () => {
                   alt="image"
                   className="w-10 h-10 rounded-full border-2 border-yellow-500"
                 />
-                <span>{user.name}</span>
               </button>
 
               {profileMenu && (
@@ -92,8 +93,9 @@ const Navbar = () => {
                     isDarkMode ? "bg-gray-800" : "bg-white"
                   }`}
                 >
+                    <h3 className="text-center mb-2">{user.displayName}</h3>
                   <Link
-                    to="/profile"
+                    to="/dashboard"
                     className="block px-4 py-2 rounded-md hover:bg-orange-500 hover:text-white"
                   >
                     Profile
@@ -175,7 +177,7 @@ const Navbar = () => {
           ) : (
             <>
               <Link
-                to="/profile"
+                to="/dashboard"
                 onClick={() => setMenuOpen(false)}
                 className="px-4 py-2 rounded-lg hover:bg-orange-500 hover:text-white"
               >

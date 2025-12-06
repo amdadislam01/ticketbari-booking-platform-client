@@ -4,6 +4,8 @@ import Home from "../pages/Home/Home";
 import ErrorPage from "../pages/ErrorPage/ErrorPage";
 import Login from "../auth/Login/Login";
 import Register from "../auth/Register/Register";
+import Dashboard from "../layouts/Dashboard";
+import PrivetRoutes from "./PrivetRoutes";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -23,5 +25,9 @@ export const router = createBrowserRouter([
         Component: Register,
       },
     ],
+  },
+  {
+    path: '/dashboard',
+    element: <PrivetRoutes><Dashboard /></PrivetRoutes>
   },
 ]);

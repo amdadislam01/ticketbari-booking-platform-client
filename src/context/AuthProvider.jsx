@@ -78,6 +78,10 @@ const AuthProvider = ({ children }) => {
     return signInWithPopup(auth, googleProvider);
   };
 
+  const updateUserProfile = (profile) => {
+      return updateProfile(auth.currentUser, profile)
+    }
+
   const resetPassword = (email) => {
     setLoading(true);
     return sendPasswordResetEmail(auth, email)
@@ -98,31 +102,6 @@ const AuthProvider = ({ children }) => {
       .finally(() => setLoading(false));
   };
 
-  const updateUserProfile = async (name, photoURL) => {
-    if (!user) return;
-
-    setLoading(true);
-    try {
-      await updateProfile(user, {
-        displayName: name,
-        photoURL: photoURL,
-      });
-
-      Swal.fire({
-        icon: "success",
-        title: "Profile Updated!",
-        text: "Your name and profile image have been updated successfully.",
-      });
-    } catch (error) {
-      Swal.fire({
-        icon: "error",
-        title: "Update Failed!",
-        text: error.message,
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -143,7 +122,7 @@ const AuthProvider = ({ children }) => {
     resetPassword,
     emailInput,
     setEmailInput,
-    updateUserProfile,
+    updateUserProfile
   };
 
   return (

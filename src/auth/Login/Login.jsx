@@ -11,10 +11,47 @@ import {
   FaBus,
 } from "react-icons/fa";
 import { useTheme } from "../../context/ThemeContext/ThemeContext";
+import { useForm } from "react-hook-form";
+import UseAuth from "../../hooks/UseAuth";
+import { useNavigate } from "react-router";
+import { toast } from "react-toastify";
 
-const LoginPage = () => {
+const Login = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+  const { loginUser, signInWithGoogle } = UseAuth();
   const { isDarkMode } = useTheme();
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
+
+  const handleLogin = (data) => {
+    loginUser(data.email, data.password)
+      .then((result) => {
+        console.log(result);
+        toast.success("Login successful!");
+        navigate("/");
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error("Login failed!");
+      });
+  };
+
+  const handleGoogleSignIn = () => {
+    signInWithGoogle()
+      .then((result) => {
+        console.log(result);
+        toast.success("Login successful!");
+        navigate("/");
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error("Google login failed!");
+      });
+  };
 
   return (
     <div
@@ -29,7 +66,7 @@ const LoginPage = () => {
           isDarkMode ? "bg-gray-800 text-gray-100" : "bg-white text-gray-800"
         }`}
       >
-        {/*  Form */}
+        {/* Login Form */}
         <div className="p-8 md:p-12 flex flex-col justify-center">
           <h2 className="text-3xl font-bold mb-2 text-center text-yellow-500">
             Welcome Back
@@ -42,7 +79,8 @@ const LoginPage = () => {
             Access your TicketBari account and manage your bookings.
           </p>
 
-          <form className="space-y-5">
+          <form className="space-y-5" onSubmit={handleSubmit(handleLogin)}>
+            {/* Email */}
             <div>
               <label className="block mb-1 font-medium">Email</label>
               <div
@@ -55,15 +93,19 @@ const LoginPage = () => {
                 <FaEnvelope className="text-yellow-500 mr-3" />
                 <input
                   type="email"
-                  name="email"
                   placeholder="Your email address"
+                  {...register("email", { required: true })}
                   className={`w-full outline-none bg-transparent ${
                     isDarkMode ? "text-gray-100" : "text-gray-800"
                   }`}
                 />
               </div>
+              {errors.email && (
+                <span className="text-red-500 text-sm">Email is required</span>
+              )}
             </div>
 
+            {/* Password */}
             <div>
               <label className="block mb-1 font-medium">Password</label>
               <div
@@ -76,8 +118,13 @@ const LoginPage = () => {
                 <FaLock className="text-yellow-500 mr-3" />
                 <input
                   type={showPassword ? "text" : "password"}
-                  name="password"
                   placeholder="Your password"
+                  {...register("password", {
+                    required: true,
+                    minLength: 6,
+                    pattern:
+                      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-={}[\]|:;"'<>,.?/~`]).{8,}$/,
+                  })}
                   className={`w-full outline-none bg-transparent ${
                     isDarkMode ? "text-gray-100" : "text-gray-800"
                   }`}
@@ -90,6 +137,11 @@ const LoginPage = () => {
                   {showPassword ? <FaEyeSlash /> : <FaEye />}
                 </button>
               </div>
+              {errors.password && (
+                <span className="text-red-500 text-sm">
+                  Password is required
+                </span>
+              )}
             </div>
 
             <button
@@ -99,9 +151,11 @@ const LoginPage = () => {
               Login
             </button>
 
+            {/* Google Login */}
             <div className="w-full flex items-center justify-center mt-4">
               <button
                 type="button"
+                onClick={handleGoogleSignIn}
                 className={`w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg transition cursor-pointer ${
                   isDarkMode
                     ? "bg-gray-700 text-yellow-500 hover:bg-gray-600"
@@ -127,7 +181,8 @@ const LoginPage = () => {
             </p>
           </form>
         </div>
-              {/* Login User */}
+
+        {/* Info  */}
         <div
           className={`hidden md:flex flex-col justify-center items-center p-10 space-y-6 transition-all duration-500 ${
             isDarkMode
@@ -176,11 +231,9 @@ const LoginPage = () => {
             </div>
           </div>
         </div>
-
-        
       </div>
     </div>
   );
 };
 
-export default LoginPage;
+export default Login;

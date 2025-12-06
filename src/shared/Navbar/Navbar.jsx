@@ -3,8 +3,10 @@ import { Link, NavLink } from "react-router";
 import { useTheme } from "../../context/ThemeContext/ThemeContext";
 import { FiSun, FiMoon } from "react-icons/fi";
 import { FaBars, FaTimes, FaBus } from "react-icons/fa";
+import UseAuth from "../../hooks/UseAuth";
 
-const Navbar = ({ user }) => {
+const Navbar = () => {
+  const { user, logoutUser } = UseAuth();
   const { isDarkMode, toggleTheme } = useTheme();
   const [menuOpen, setMenuOpen] = useState(false);
   const [profileMenu, setProfileMenu] = useState(false);
@@ -77,8 +79,8 @@ const Navbar = ({ user }) => {
                 className="flex items-center gap-2"
               >
                 <img
-                  src={user.avatar}
-                  alt="avatar"
+                  src={user?.photoURL || user.reloadUserInfo.photoUrl}
+                  alt="image"
                   className="w-10 h-10 rounded-full border-2 border-yellow-500"
                 />
                 <span>{user.name}</span>
@@ -96,7 +98,10 @@ const Navbar = ({ user }) => {
                   >
                     Profile
                   </Link>
-                  <button className="w-full text-left px-4 py-2 rounded-md hover:bg-red-500 hover:text-white">
+                  <button
+                    onClick={logoutUser}
+                    className="w-full text-left px-4 py-2 rounded-md hover:bg-red-500 hover:text-white"
+                  >
                     Logout
                   </button>
                 </div>
@@ -135,7 +140,9 @@ const Navbar = ({ user }) => {
               onClick={() => setMenuOpen(false)}
               className={({ isActive }) =>
                 `block px-4 py-3 rounded-lg text-lg ${
-                  isActive ? "bg-orange-500 text-white" : "hover:bg-yellow-100"
+                  isActive
+                    ? "bg-orange-500 text-white"
+                    : "hover:bg-yellow-100 hover:text-black"
                 }`
               }
             >
@@ -174,7 +181,10 @@ const Navbar = ({ user }) => {
               >
                 Profile
               </Link>
-              <button className="px-4 py-2 rounded-lg bg-red-500 text-white">
+              <button
+                onClick={logoutUser}
+                className="px-4 py-2 rounded-lg bg-red-500 text-white"
+              >
                 Logout
               </button>
             </>

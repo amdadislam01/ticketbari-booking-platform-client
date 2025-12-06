@@ -18,35 +18,57 @@ const Dashboard = () => {
   const [active, setActive] = useState("profile");
   const [openMenu, setOpenMenu] = useState(false);
 
-
   // ------------------------------ ROLE BASED MENU ------------------------------
   const menuItems =
     role === "user"
       ? [
           { key: "profile", label: "Profile", icon: <FaUser /> },
           { key: "tickets", label: "My Booked Tickets", icon: <FaTicketAlt /> },
-          { key: "transactions", label: "Transaction History", icon: <FaHistory /> },
+          {
+            key: "transactions",
+            label: "Transaction History",
+            icon: <FaHistory />,
+          },
         ]
       : role === "vendor"
       ? [
           { key: "profile", label: "Profile", icon: <FaUser /> },
           { key: "added-ticket", label: "Add Ticket", icon: <VscDiffAdded /> },
-          { key: "my-tickets", label: "My Added Tickets", icon: <FaTicketAlt /> },
-          { key: "request-booking", label: "Requested Bookings", icon: <CiSquareQuestion /> },
-          { key: "revenue-overview", label: "Revenue Overview", icon: <GrOverview /> },
+          {
+            key: "my-tickets",
+            label: "My Added Tickets",
+            icon: <FaTicketAlt />,
+          },
+          {
+            key: "request-booking",
+            label: "Requested Bookings",
+            icon: <CiSquareQuestion />,
+          },
+          {
+            key: "revenue-overview",
+            label: "Revenue Overview",
+            icon: <GrOverview />,
+          },
         ]
       : role === "admin"
       ? [
           { key: "profile", label: "Profile", icon: <FaUser /> },
-          { key: "manage-tickets", label: "Manage Tickets", icon: <LuTicketsPlane /> },
+          {
+            key: "manage-tickets",
+            label: "Manage Tickets",
+            icon: <LuTicketsPlane />,
+          },
           { key: "manage-users", label: "Manage Users", icon: <HiUsers /> },
-          { key: "advertise-tickets", label: "Advertise Tickets", icon: <RiTicket2Fill /> },
+          {
+            key: "advertise-tickets",
+            label: "Advertise Tickets",
+            icon: <RiTicket2Fill />,
+          },
         ]
       : [];
 
   return (
     <div className="flex flex-col min-h-screen">
-
       {/*  MOBILE HEADER  */}
       <div
         className={`md:hidden flex justify-between items-center px-5 py-4 shadow sticky top-0 z-50 ${
@@ -94,16 +116,15 @@ const Dashboard = () => {
         </div>
       )}
 
-      {/* ------------------------- MAIN CONTENT AREA ------------------------- */}
+      {/*  MAIN CONTENT AREA  */}
       <div
         className={`flex flex-1 transition-colors duration-500 ${
           isDarkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"
         }`}
       >
-
-        {/* ------------------------- SIDEBAR (DESKTOP) ------------------------- */}
+        {/*  SIDEBAR   */}
         <aside
-          className={`hidden md:flex w-64 p-6 flex-col gap-6 border-r ${
+          className={`hidden md:flex w-64 p-6 flex-col gap-6 border-r sticky top-0 h-screen ${
             isDarkMode
               ? "bg-gray-800 border-gray-700"
               : "bg-white border-gray-200"
@@ -118,7 +139,7 @@ const Dashboard = () => {
             <button
               key={item.key}
               onClick={() => setActive(item.key)}
-              className={`flex items-center gap-3 p-3 rounded-lg transition ${
+              className={`flex items-center gap-3 p-3 rounded-lg transition cursor-pointer ${
                 active === item.key
                   ? "bg-yellow-400 text-orange-600 font-semibold"
                   : "hover:bg-yellow-100 hover:text-orange-600"
@@ -131,11 +152,8 @@ const Dashboard = () => {
 
         {/*  PAGE CONTENT  */}
         <main className="flex-1 p-5 md:p-8">
-
           {/* PROFILE PAGE */}
-          {active === "profile" && (
-            <Profile />
-          )}
+          {active === "profile" && <Profile />}
 
           {/* VENDOR  */}
           {active === "added-ticket" && <AddedTickets />}

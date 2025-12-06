@@ -25,3 +25,40 @@
 .animate-slideZoom {
   animation: slideZoom 4s ease-in-out infinite;
 }
+
+/* Added Tickets */
+.input-box {
+  @apply w-full mt-1 px-4 py-2 rounded-lg border 
+  bg-white dark:bg-gray-800 
+  text-gray-900 dark:text-gray-100
+  placeholder-gray-400 dark:placeholder-gray-500
+  focus:ring-2 focus:ring-orange-500 outline-none;
+}
+
+.error {
+  @apply text-red-500 text-sm mt-1;
+}
+
+.input-box::placeholder {
+  @apply text-gray-500;
+}
+
+.dark .input-box::placeholder {
+  color: #9ca3af !important; 
+}
+
+.upload-box p {
+  @apply text-gray-500 dark:text-gray-400;
+}
+
+.upload-box svg {
+  @apply text-orange-500;
+}
+
+.dark .input-box {
+  @apply border-gray-700 bg-gray-800 text-gray-100;
+}
+
+.input-box {
+  @apply border-gray-300 bg-white text-gray-800;
+}

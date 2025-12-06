@@ -12,7 +12,7 @@ const Footer = () => {
   const { isDarkMode } = useTheme();
   return (
     <footer
-      className={`w-full mt-10 pt-10 border-t transition-colors duration-300 ${
+      className={`w-full border-t border-gray-200 pt-10 transition-colors duration-300 ${
         isDarkMode
           ? "bg-gray-900 text-gray-300 border-gray-700"
           : "bg-white text-gray-800 border-gray-200"

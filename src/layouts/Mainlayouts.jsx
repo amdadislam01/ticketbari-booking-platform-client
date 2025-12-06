@@ -7,7 +7,7 @@ const Mainlayouts = () => {
   return (
     <div>
       <Navbar />
-      <div className="min-h-[58vh]">
+      <div className="min-h-[63vh]">
         <Outlet />
       </div>
       <Footer />

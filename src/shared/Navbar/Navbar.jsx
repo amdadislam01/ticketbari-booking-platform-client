@@ -27,7 +27,7 @@ const Navbar = ({ user }) => {
           <span className="text-orange-500">TicketBari</span>
         </Link>
 
-        {/* Desktop Menu */}
+        {/*  Menu */}
         <div className="hidden md:flex items-center gap-6">
           {navItems.map((item) => (
             <NavLink
@@ -49,7 +49,7 @@ const Navbar = ({ user }) => {
         <div className="hidden md:flex items-center gap-4">
           <button
             onClick={toggleTheme}
-            className="p-2 rounded-full border border-orange-500"
+            className="p-2 rounded-full border border-orange-500 cursor-pointer"
           >
             {isDarkMode ? <FiSun /> : <FiMoon />}
           </button>
@@ -105,7 +105,7 @@ const Navbar = ({ user }) => {
           )}
         </div>
 
-        {/* Mobile Menu Button */}
+        {/* Mobile Menu  */}
         <button
           className="md:hidden text-3xl"
           onClick={() => setMenuOpen(!menuOpen)}

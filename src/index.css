@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap");
 @import "tailwindcss";
 @plugin "daisyui";
 @plugin "daisyui" {
@@ -7,4 +7,20 @@
 
 * {
   font-family: "Lato", sans-serif;
+}
+
+/* banner Animation */
+@keyframes slideZoom {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.animate-slideZoom {
+  animation: slideZoom 4s ease-in-out infinite;
 }

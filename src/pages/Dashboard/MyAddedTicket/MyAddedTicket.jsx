@@ -6,6 +6,8 @@ import { Link } from "react-router";
 import UseAuth from "../../../hooks/UseAuth";
 import Loading from "../../../components/Loading/Loading";
 import { FaCalendarAlt, FaClock } from "react-icons/fa";
+import Swal from "sweetalert2";
+
 
 const MyAddedTicket = () => {
   const { user } = UseAuth();
@@ -26,16 +28,32 @@ const MyAddedTicket = () => {
     enabled: !!user?.email,
   });
 
-  // const { mutateAsync: deleteTicket } = useMutation({
-  //   mutationFn: async (id) => {
-  //     const { data } = await axiosSecure.delete(`/added-ticket/${id}`);
-  //     return data;
-  //   },
-  //   onSuccess: () => {
-  //     toast.success("Ticket deleted!");
-  //     refetch();
-  //   },
-  // });
+  // Delete Ticket
+  const handleDeleteTicket = (id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "This Ticket will be permanently deleted!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#e3342f",
+      cancelButtonColor: "#6c757d",
+      confirmButtonText: "Yes, Delete!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axiosSecure.delete(`/added-ticket/${id}`).then((res) => {
+          if (res.data.deletedCount) {
+            Swal.fire({
+              icon: "success",
+              title: "Ticket Deleted",
+              timer: 2000,
+              showConfirmButton: false,
+            });
+            refetch();
+          }
+        });
+      }
+    });
+  };
 
   if (isLoading) return <Loading />;
 
@@ -160,7 +178,7 @@ const MyAddedTicket = () => {
                 </Link>
 
                 <button
-                  onClick={() => deleteTicket(ticket._id)}
+                  onClick={() => handleDeleteTicket(ticket._id)}
                   disabled={ticket.status === "rejected"}
                   className={`
     px-5 py-2 rounded-xl font-semibold text-white

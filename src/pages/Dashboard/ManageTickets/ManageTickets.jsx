@@ -3,6 +3,7 @@ import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import UseAuth from "../../../hooks/UseAuth";
 import { useTheme } from "../../../context/ThemeContext/ThemeContext";
 import Loading from "../../../components/Loading/Loading";
+import Swal from "sweetalert2";
 
 const ManageTickets = () => {
   const axiosSecure = useAxiosSecure();
@@ -27,10 +28,18 @@ const ManageTickets = () => {
 
   const handleApprove = async (id) => {
     try {
-      await axiosSecure.patch(`/added-ticket/update/${id}`, { status: "approved" });
+      await axiosSecure.patch(`/added-ticket/update/${id}`, {
+        status: "approved",
+      });
       setTickets((prev) =>
         prev.map((t) => (t._id === id ? { ...t, status: "approved" } : t))
       );
+      Swal.fire({
+        title: "Approved!",
+        text: "The ticket has been approved successfully.",
+        icon: "success",
+        confirmButtonColor: "#3085d6",
+      });
     } catch (error) {
       console.log(error);
     }
@@ -38,10 +47,18 @@ const ManageTickets = () => {
 
   const handleReject = async (id) => {
     try {
-      await axiosSecure.patch(`/added-ticket/update/${id}`, { status: "rejected" });
+      await axiosSecure.patch(`/added-ticket/update/${id}`, {
+        status: "rejected",
+      });
       setTickets((prev) =>
         prev.map((t) => (t._id === id ? { ...t, status: "rejected" } : t))
       );
+      Swal.fire({
+        title: "Rejected!",
+        text: "The ticket has been rejected.",
+        icon: "error",
+        confirmButtonColor: "#d33",
+      });
     } catch (error) {
       console.log(error);
     }
@@ -66,7 +83,9 @@ const ManageTickets = () => {
           <thead>
             <tr
               className={`text-left ${
-                isDarkMode ? "bg-[#334155] text-gray-200" : "bg-gray-100 text-gray-700"
+                isDarkMode
+                  ? "bg-[#334155] text-gray-200"
+                  : "bg-gray-100 text-gray-700"
               }`}
             >
               <th className="py-3 px-4">#</th>

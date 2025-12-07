@@ -13,16 +13,25 @@ import useRole from "../hooks/useRole";
 import Profile from "../pages/Dashboard/Profile/Profile";
 import MyAddedTicket from "../pages/Dashboard/MyAddedTicket/MyAddedTicket";
 import ManageTickets from "../pages/Dashboard/ManageTickets/ManageTickets";
+import ManageUsers from "../pages/Dashboard/ManageUsers/ManageUsers";
 
 const Dashboard = () => {
   const { role } = useRole();
   const { isDarkMode } = useTheme();
-  const [active, setActive] = useState("profile");
+  const [active, setActive] = useState(
+    localStorage.getItem("dashboardActive") || "profile"
+  );
+
   const [openMenu, setOpenMenu] = useState(false);
 
-  // ------------------------------ ROLE BASED MENU ------------------------------
+  const handleMenuChange = (key) => {
+    setActive(key);
+    localStorage.setItem("dashboardActive", key);
+  };
+
+  //  ROLE BASED  
   const menuItems =
-    role === "user"
+    role === "user" || role === "fraud"
       ? [
           { key: "profile", label: "Profile", icon: <FaUser /> },
           { key: "tickets", label: "My Booked Tickets", icon: <FaTicketAlt /> },
@@ -71,7 +80,7 @@ const Dashboard = () => {
 
   return (
     <div className="flex flex-col min-h-screen">
-      {/*  MOBILE HEADER  */}
+      {/* MOBILE HEADER */}
       <div
         className={`md:hidden flex justify-between items-center px-5 py-4 shadow sticky top-0 z-50 ${
           isDarkMode ? "bg-gray-800 text-white" : "bg-white text-gray-900"
@@ -90,7 +99,7 @@ const Dashboard = () => {
         </button>
       </div>
 
-      {/*  MOBILE MENU  */}
+      {/* MOBILE MENU */}
       {openMenu && (
         <div
           className={`md:hidden flex flex-col px-5 pb-4 gap-3 border-b ${
@@ -103,7 +112,7 @@ const Dashboard = () => {
             <button
               key={item.key}
               onClick={() => {
-                setActive(item.key);
+                handleMenuChange(item.key);
                 setOpenMenu(false);
               }}
               className={`flex items-center gap-3 p-3 rounded-lg transition ${
@@ -118,15 +127,15 @@ const Dashboard = () => {
         </div>
       )}
 
-      {/*  MAIN CONTENT AREA  */}
+      {/* MAIN CONTENT */}
       <div
-        className={`flex flex-1 transition-colors duration-500 ${
+        className={`flex flex-1 ${
           isDarkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"
         }`}
       >
-        {/*  SIDEBAR   */}
+        {/* SIDEBAR */}
         <aside
-          className={`hidden md:flex w-64 p-6 flex-col gap-6 border-r sticky top-0 h-screen ${
+          className={`hidden md:flex w-64 p-6 flex-col gap-6 border-r h-screen sticky top-0 ${
             isDarkMode
               ? "bg-gray-800 border-gray-700"
               : "bg-white border-gray-200"
@@ -140,8 +149,8 @@ const Dashboard = () => {
           {menuItems.map((item) => (
             <button
               key={item.key}
-              onClick={() => setActive(item.key)}
-              className={`flex items-center gap-3 p-3 rounded-lg transition cursor-pointer ${
+              onClick={() => handleMenuChange(item.key)}
+              className={`flex items-center gap-3 p-3 rounded-lg transition ${
                 active === item.key
                   ? "bg-yellow-400 text-orange-600 font-semibold"
                   : "hover:bg-yellow-100 hover:text-orange-600"
@@ -152,17 +161,13 @@ const Dashboard = () => {
           ))}
         </aside>
 
-        {/*  PAGE CONTENT  */}
+        {/* PAGE CONTENT */}
         <main className="flex-1 p-5 md:p-8">
-          {/* PROFILE PAGE */}
           {active === "profile" && <Profile />}
-
-          {/* VENDOR  */}
           {active === "added-ticket" && <AddedTickets />}
           {active === "my-tickets" && <MyAddedTicket />}
-
-          {/* Admin Page */}
           {active === "manage-tickets" && <ManageTickets />}
+          {active === "manage-users" && <ManageUsers />}
         </main>
       </div>
     </div>

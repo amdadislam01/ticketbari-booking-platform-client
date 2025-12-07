@@ -181,7 +181,7 @@ const MyAddedTicket = () => {
                     : "bg-red-500 text-white"
                 }`}
               >
-                {ticket.status === "approved" && "✔ Approved"}
+                {ticket.status === "approved" &&  "✔ Approved"}
                 {ticket.status === "pending" && "⏳ Pending"}
                 {ticket.status === "rejected" && "❌ Rejected"}
               </span>

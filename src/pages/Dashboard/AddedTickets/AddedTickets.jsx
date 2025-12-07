@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { motion, number } from "framer-motion";
+import { motion } from "framer-motion";
 import { useState } from "react";
 import { FaCloudUploadAlt } from "react-icons/fa";
 import { useTheme } from "../../../context/ThemeContext/ThemeContext";
@@ -7,6 +7,8 @@ import UseAuth from "../../../hooks/UseAuth";
 import axios from "axios";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import Swal from "sweetalert2";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const AddTicket = () => {
   const { user } = UseAuth();
@@ -14,21 +16,41 @@ const AddTicket = () => {
   const { isDarkMode } = useTheme();
   const [imgPreview, setImgPreview] = useState("");
   const [photo, setPhoto] = useState(null);
+  const [ticketAddedDate, setTicketAddedDate] = useState(null);
+  const [ticketTime, setTicketTime] = useState(null);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm();
 
   const handelAddedTicket = (data) => {
+    if (!ticketAddedDate) {
+      Swal.fire("Error", "Please select a valid date!", "error");
+      return;
+    }
+
+    if (!ticketTime) {
+      Swal.fire("Error", "Please select a valid time!", "error");
+      return;
+    }
+
+    data.date = ticketAddedDate.toISOString();
+    data.time = ticketTime.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: true,
+    });
+
     const formData = new FormData();
     formData.append("image", photo);
+
     axios
       .post(
-        `https://api.imgbb.com/1/upload?&key=${
-          import.meta.env.VITE_IMAGE_HOST
-        }`,
+        `https://api.imgbb.com/1/upload?&key=${import.meta.env.VITE_IMAGE_HOST}`,
         formData
       )
       .then((res) => {
@@ -41,6 +63,11 @@ const AddTicket = () => {
               icon: "success",
               draggable: true,
             });
+            reset();
+            setPhoto(null);
+            setImgPreview("");
+            setTicketAddedDate(null);
+            setTicketTime(null);
           }
         });
       })
@@ -141,11 +168,30 @@ const AddTicket = () => {
         </div>
 
         {/* Date */}
-        <div>
-          <label className="font-semibold">Departure Date & Time</label>
-          <input
-            type="datetime-local"
-            {...register("departure", { required: true })}
+        <div className="flex flex-col">
+          <label className="font-semibold">Date</label>
+          <DatePicker
+            selected={ticketAddedDate}
+            onChange={(date) => setTicketAddedDate(date)}
+            minDate={new Date()}
+            placeholderText="Select Ticket Date"
+            className="input-box"
+            dateFormat="yyyy-MM-dd"
+          />
+        </div>
+
+        {/* Time */}
+        <div className="flex flex-col">
+          <label className="font-semibold">Time</label>
+          <DatePicker
+            selected={ticketTime}
+            onChange={(date) => setTicketTime(date)}
+            showTimeSelect
+            showTimeSelectOnly
+            timeIntervals={1}
+            timeCaption="Time"
+            dateFormat="hh:mm:ss aa"
+            placeholderText="Select Time"
             className="input-box"
           />
         </div>
@@ -158,7 +204,11 @@ const AddTicket = () => {
               <input type="checkbox" {...register("perks")} value="AC" /> AC
             </label>
             <label>
-              <input type="checkbox" {...register("perks")} value="Breakfast" />{" "}
+              <input
+                type="checkbox"
+                {...register("perks")}
+                value="Breakfast"
+              />{" "}
               Breakfast
             </label>
             <label>
@@ -198,7 +248,7 @@ const AddTicket = () => {
           </label>
         </div>
 
-        {/* Readonly */}
+        {/* Vendor info */}
         <div>
           <label className="font-semibold">Vendor Name</label>
           <input
@@ -221,7 +271,7 @@ const AddTicket = () => {
 
         {/* Submit */}
         <div className="col-span-2">
-          <button className="w-full py-3 text-lg font-semibold bg-orange-600 hover:bg-orange-700 text-white rounded-xl transition-all">
+          <button className="w-full py-3 text-lg font-semibold bg-orange-600 hover:bg-orange-700 text-white rounded-xl transition-all cursor-pointer">
             Add Ticket
           </button>
         </div>

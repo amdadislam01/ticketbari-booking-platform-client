@@ -11,6 +11,7 @@ import { Link } from "react-router";
 import AddedTickets from "../pages/Dashboard/AddedTickets/AddedTickets";
 import useRole from "../hooks/useRole";
 import Profile from "../pages/Dashboard/Profile/Profile";
+import MyAddedTicket from "../pages/Dashboard/MyAddedTicket/MyAddedTicket";
 
 const Dashboard = () => {
   const { role } = useRole();
@@ -157,13 +158,14 @@ const Dashboard = () => {
 
           {/* VENDOR  */}
           {active === "added-ticket" && <AddedTickets />}
+          {active === "my-tickets" && <MyAddedTicket />}
 
           {/* DEFAULT PAGE TEXT */}
-          {active !== "profile" && active !== "added-ticket" && (
+          {/* {active !== "profile" && active !== "added-ticket" && (
             <h1 className="text-xl font-bold">
               {active.replace("-", " ").toUpperCase()}
             </h1>
-          )}
+          )} */}
         </main>
       </div>
     </div>

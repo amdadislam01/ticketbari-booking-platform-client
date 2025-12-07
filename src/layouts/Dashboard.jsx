@@ -12,6 +12,7 @@ import AddedTickets from "../pages/Dashboard/AddedTickets/AddedTickets";
 import useRole from "../hooks/useRole";
 import Profile from "../pages/Dashboard/Profile/Profile";
 import MyAddedTicket from "../pages/Dashboard/MyAddedTicket/MyAddedTicket";
+import ManageTickets from "../pages/Dashboard/ManageTickets/ManageTickets";
 
 const Dashboard = () => {
   const { role } = useRole();
@@ -160,12 +161,8 @@ const Dashboard = () => {
           {active === "added-ticket" && <AddedTickets />}
           {active === "my-tickets" && <MyAddedTicket />}
 
-          {/* DEFAULT PAGE TEXT */}
-          {/* {active !== "profile" && active !== "added-ticket" && (
-            <h1 className="text-xl font-bold">
-              {active.replace("-", " ").toUpperCase()}
-            </h1>
-          )} */}
+          {/* Admin Page */}
+          {active === "manage-tickets" && <ManageTickets />}
         </main>
       </div>
     </div>

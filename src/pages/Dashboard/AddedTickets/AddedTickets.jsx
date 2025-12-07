@@ -25,7 +25,7 @@ const AddTicket = () => {
     formState: { errors },
     reset,
   } = useForm();
-
+  // Added Ticket
   const handelAddedTicket = (data) => {
     if (!ticketAddedDate) {
       Swal.fire("Error", "Please select a valid date!", "error");

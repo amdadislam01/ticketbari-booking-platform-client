@@ -203,7 +203,7 @@ const MyAddedTicket = () => {
                   <strong>Transport:</strong> {ticket.transport}
                 </p>
                 <p>
-                  <strong>Price:</strong> ${ticket.price}
+                  <strong>Price:</strong> ৳ {ticket.price}
                 </p>
                 <p>
                   <strong>Quantity:</strong> {ticket.quantity}

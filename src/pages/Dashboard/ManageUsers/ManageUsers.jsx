@@ -8,7 +8,6 @@ const ManageUsers = () => {
   const { isDarkMode } = useTheme();
   const [loadingId, setLoadingId] = useState(null);
 
-  // Fetch all users using React Query
   const { data: users = [], refetch } = useQuery({
     queryKey: ["users"],
     queryFn: async () => {
@@ -17,8 +16,6 @@ const ManageUsers = () => {
     },
   });
 
-
-  // Update User Role 
   const updateRole = async (id, role) => {
     try {
       setLoadingId(id);
@@ -39,8 +36,9 @@ const ManageUsers = () => {
     >
       <h1 className="text-3xl font-bold mb-6">Manage Users</h1>
 
+      {/* =================== DESKTOP/TABLET TABLE (unchanged) =================== */}
       <div
-        className={`overflow-x-auto rounded-xl shadow-lg p-4 ${
+        className={`hidden md:block overflow-x-auto rounded-xl shadow-lg p-4 ${
           isDarkMode ? "bg-[#1e293b]" : "bg-white"
         }`}
       >
@@ -48,7 +46,9 @@ const ManageUsers = () => {
           <thead>
             <tr
               className={`text-left ${
-                isDarkMode ? "bg-[#334155] text-gray-200" : "bg-gray-100 text-gray-700"
+                isDarkMode
+                  ? "bg-[#334155] text-gray-200"
+                  : "bg-gray-100 text-gray-700"
               }`}
             >
               <th className="py-3 px-4">#</th>
@@ -68,7 +68,9 @@ const ManageUsers = () => {
                 }`}
               >
                 <td className="py-3 px-4">{index + 1}</td>
-                <td className="py-3 px-4 font-medium">{user.displayName || "No Name"}</td>
+                <td className="py-3 px-4 font-medium">
+                  {user.displayName || "No Name"}
+                </td>
                 <td className="py-3 px-4">{user.email}</td>
                 <td className="py-3 px-4 capitalize">
                   <span
@@ -86,32 +88,28 @@ const ManageUsers = () => {
                   </span>
                 </td>
 
-                {/* Actions */}
                 <td className="py-3 px-4 flex gap-3 justify-center flex-wrap">
-                  {/* Make Admin */}
                   <button
                     onClick={() => updateRole(user._id, "admin")}
                     disabled={loadingId === user._id || user.role === "admin"}
-                    className="px-3 py-1 rounded-md bg-blue-600 text-white text-sm hover:bg-blue-700 transition disabled:opacity-40"
+                    className="px-3 py-1 rounded-md bg-blue-600 text-white text-sm hover:bg-blue-700 disabled:opacity-40"
                   >
                     {loadingId === user._id ? "..." : "Make Admin"}
                   </button>
 
-                  {/* Make Vendor */}
                   <button
                     onClick={() => updateRole(user._id, "vendor")}
                     disabled={loadingId === user._id || user.role === "vendor"}
-                    className="px-3 py-1 rounded-md bg-purple-600 text-white text-sm hover:bg-purple-700 transition disabled:opacity-40"
+                    className="px-3 py-1 rounded-md bg-purple-600 text-white text-sm hover:bg-purple-700 disabled:opacity-40"
                   >
                     {loadingId === user._id ? "..." : "Make Vendor"}
                   </button>
 
-                  {/* Mark as Fraud (Only Vendors) */}
                   {user.role === "vendor" && (
                     <button
                       onClick={() => updateRole(user._id, "fraud")}
                       disabled={loadingId === user._id}
-                      className="px-3 py-1 rounded-md bg-red-600 text-white text-sm hover:bg-red-700 transition disabled:opacity-40"
+                      className="px-3 py-1 rounded-md bg-red-600 text-white text-sm hover:bg-red-700 disabled:opacity-40"
                     >
                       {loadingId === user._id ? "..." : "Mark as Fraud"}
                     </button>
@@ -122,13 +120,74 @@ const ManageUsers = () => {
 
             {users.length === 0 && (
               <tr>
-                <td colSpan="5" className="text-center py-6 text-gray-400">
+                <td className="text-center py-6 text-gray-400" colSpan={5}>
                   No users found.
                 </td>
               </tr>
             )}
           </tbody>
         </table>
+      </div>
+
+      {/* =================== MOBILE CARD VIEW =================== */}
+      <div className="md:hidden space-y-4">
+        {users.map((user, index) => (
+          <div
+            key={user._id}
+            className={`p-4 rounded-xl shadow ${
+              isDarkMode ? "bg-[#1e293b]" : "bg-white"
+            }`}
+          >
+            <div className="flex justify-between items-center">
+              <h2 className="text-lg font-semibold">
+                {user.displayName || "No Name"}
+              </h2>
+              <span
+                className={`px-2 py-1 rounded-full text-xs font-semibold ${
+                  user.role === "admin"
+                    ? "bg-blue-600/20 text-blue-400"
+                    : user.role === "vendor"
+                    ? "bg-purple-600/20 text-purple-400"
+                    : user.role === "fraud"
+                    ? "bg-red-600/20 text-red-400"
+                    : "bg-gray-500/20 text-gray-300"
+                }`}
+              >
+                {user.role}
+              </span>
+            </div>
+
+            <p className="text-gray-400 text-sm mt-1">{user.email}</p>
+
+            <div className="mt-4 flex flex-col gap-2">
+              <button
+                onClick={() => updateRole(user._id, "admin")}
+                disabled={loadingId === user._id || user.role === "admin"}
+                className="w-full py-2 rounded-md bg-blue-600 text-white text-sm hover:bg-blue-700 disabled:opacity-40"
+              >
+                {loadingId === user._id ? "..." : "Make Admin"}
+              </button>
+
+              <button
+                onClick={() => updateRole(user._id, "vendor")}
+                disabled={loadingId === user._id || user.role === "vendor"}
+                className="w-full py-2 rounded-md bg-purple-600 text-white text-sm hover:bg-purple-700 disabled:opacity-40"
+              >
+                {loadingId === user._id ? "..." : "Make Vendor"}
+              </button>
+
+              {user.role === "vendor" && (
+                <button
+                  onClick={() => updateRole(user._id, "fraud")}
+                  disabled={loadingId === user._id}
+                  className="w-full py-2 rounded-md bg-red-600 text-white text-sm hover:bg-red-700 disabled:opacity-40"
+                >
+                  {loadingId === user._id ? "..." : "Mark as Fraud"}
+                </button>
+              )}
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );

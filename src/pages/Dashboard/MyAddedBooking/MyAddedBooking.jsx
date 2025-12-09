@@ -4,23 +4,22 @@ import { useQuery } from "@tanstack/react-query";
 import { useTheme } from "../../../context/ThemeContext/ThemeContext";
 import UseAuth from "../../../hooks/UseAuth";
 import {
-  FaClock,
-  FaMoneyBillWave,
-  FaCheckCircle,
-  FaTimesCircle,
   FaHourglassHalf,
-  FaLocationArrow,
+  FaMapMarkerAlt,
+  FaCalendarAlt,
+  FaTicketAlt,
 } from "react-icons/fa";
 import Loading from "../../../components/Loading/Loading";
+import { motion } from "framer-motion";
 
+// Reusable Countdown
 const Countdown = ({ date }) => {
   const [countdown, setCountdown] = useState("");
 
   useEffect(() => {
-    const target = new Date(date);
-
+    const target = new Date(date).getTime();
     const interval = setInterval(() => {
-      const now = new Date();
+      const now = Date.now();
       const diff = target - now;
 
       if (diff <= 0) {
@@ -30,9 +29,9 @@ const Countdown = ({ date }) => {
       }
 
       const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
-      const m = Math.floor((diff / (1000 * 60)) % 60);
-      const s = Math.floor((diff / 1000) % 60);
+      const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const s = Math.floor((diff % (1000 * 60)) / 1000);
 
       setCountdown(`${d}d ${h}h ${m}m ${s}s`);
     }, 1000);
@@ -40,22 +39,22 @@ const Countdown = ({ date }) => {
     return () => clearInterval(interval);
   }, [date]);
 
+  if (countdown === "Expired") return <span className="text-red-500 font-bold">Expired</span>;
+
   return (
-    <span className="px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300">
+    <span className="px-4 py-2 rounded-xl bg-linear-to-r from-orange-500 to-red-600 text-white font-bold text-sm shadow-lg">
       {countdown}
     </span>
   );
 };
-
 
 const MyAddedBooking = () => {
   const axiosSecure = useAxiosSecure();
   const { isDarkMode } = useTheme();
   const { user } = UseAuth();
 
-  //  Bookings
   const { data: bookings = [], isLoading } = useQuery({
-    queryKey: ["booking-tickets", user?.email],
+    queryKey: ["my-bookings", user?.email],
     queryFn: async () => {
       const res = await axiosSecure.get(`/booking?email=${user?.email}`);
       return res.data;
@@ -63,157 +62,156 @@ const MyAddedBooking = () => {
     enabled: !!user?.email,
   });
 
-  if (isLoading) {
-    return <Loading />
-  }
+  if (isLoading) return <Loading />;
 
   return (
     <div
-      className={`p-6 min-h-screen transition-all duration-300 ${
+      className={`min-h-screen py-8 px-4 sm:px-6 lg:px-8 ${
         isDarkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"
       }`}
     >
-      <h1 className="text-3xl font-bold mb-10 text-center tracking-wide">
-        My Booked Tickets
-      </h1>
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <motion.h1
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-4xl sm:text-5xl font-extrabold text-center mb-12 bg-linear-to-r from-orange-500 to-pink-600 bg-clip-text text-transparent"
+        >
+          My Booked Tickets
+        </motion.h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {bookings.map((ticket) => {
-          const departurePassed = new Date(ticket.ticketDate) - new Date() <= 0;
-          const status = ticket.status;
+        {bookings.length === 0 ? (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="text-center py-20"
+          >
+            <p className="text-xl text-gray-500 dark:text-gray-400">
+              No bookings found. Start your journey today!
+            </p>
+          </motion.div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {bookings.map((booking, index) => {
+              const isExpired = new Date(booking.ticketDate) < new Date();
+              const status = booking.status;
 
-          return (
-            <div
-              key={ticket._id}
-              className={`rounded-2xl shadow-xl overflow-hidden border transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl ${
-                isDarkMode
-                  ? "bg-gray-800/60 backdrop-blur-xl border-gray-700"
-                  : "bg-white border-gray-200"
-              }`}
-            >
-              {/* Image */}
-              <img
-                src={ticket.image}
-                alt={ticket.title}
-                className="w-full h-48 object-cover"
-              />
+              const statusStyles = {
+                pending: "from-yellow-500 to-orange-600",
+                approved: "from-blue-500 to-purple-600",
+                paid: "from-green-500 to-emerald-600",
+                rejected: "from-red-500 to-rose-600",
+              };
 
-              <div className="p-6 space-y-4">
-                {/* Title */}
-                <h2 className="flex justify-between items-center text-xl font-bold">
-                  {ticket.title} 
-                  <span
-                    className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-semibold shadow ${
-                      status === "pending" && "bg-yellow-500/20 text-yellow-400"
-                    }
-              ${status === "accepted" && "bg-blue-500/20 text-blue-400"}
-              ${status === "rejected" && "bg-red-500/20 text-red-400"}
-              ${status === "paid" && "bg-green-500/20 text-green-400"}
-            `}
-                  >
-                    {status === "pending" && <FaClock />}
-                    {status === "accepted" && <FaCheckCircle />}
-                    {status === "paid" && <FaMoneyBillWave />}
-                    {status === "rejected" && <FaTimesCircle />}
-                    Status: {status}
-                  </span>
-                </h2>
+              const gradient = statusStyles[status] || statusStyles.pending;
 
-                {/* Info */}
-                <div className="text-sm space-y-1">
-                  <div className="flex items-center gap-3">
-                    <p>
-                      Booked Quantity:
-                      <span className="font-semibold"> {ticket.quantity}</span>
-                    </p>
-                    •
-                    <p>
-                      Total Price:
-                      <span className="font-semibold">
-                        {" "}
-                        {ticket.totalPrice} Tk
+              return (
+                <motion.div
+                  key={booking._id}
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  whileHover={{ y: -8 }}
+                  className={`relative rounded-2xl overflow-hidden shadow-xl border ${
+                    isDarkMode
+                      ? "bg-gray-800/90 border-gray-700"
+                      : "bg-white/95 border-gray-200"
+                  }`}
+                >
+                  {/* Image */}
+                  <div className="relative h-48 overflow-hidden">
+                    <img
+                      src={booking.image}
+                      alt={booking.title}
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-linear-to-t from-black/70 via-transparent to-transparent" />
+                    <div className="absolute top-4 right-4">
+                      <span
+                        className={`px-4 py-2 rounded-full text-white font-bold text-sm shadow-lg bg-linear-to-r ${gradient}`}
+                      >
+                        {status.charAt(0).toUpperCase() + status.slice(1)}
                       </span>
-                    </p>
-                  </div>
-
-                  <p className="flex items-center gap-2">
-                    <FaLocationArrow /> {ticket.from}
-                    <span className="font-bold">→</span> {ticket.to}
-                  </p>
-
-                  <p className="flex items-center gap-2">
-                    <FaClock />
-                    Departure:{" "}
-                    {new Date(ticket.ticketDate).toLocaleDateString()} •{" "}
-                    {ticket.time}
-                  </p>
-                </div>
-
-                {/* Countdown  */}
-                {status !== "rejected" && (
-                  <div
-                    className={`mt-2 p-3 rounded-xl border flex items-center gap-3 text-sm font-medium ${
-                      isDarkMode
-                        ? "border-gray-700 bg-gray-800/40"
-                        : "border-gray-200 bg-gray-50"
-                    }`}
-                  >
-                    <FaHourglassHalf className="text-blue-500 text-lg" />
-                    <span className="font-semibold">Countdown:</span>
-                    <div className="text-blue-500 font-bold">
-                      <Countdown date={ticket.ticketDate} />
                     </div>
                   </div>
-                )}
 
-                {/* Buttons Functionality */}
-                {/* Pending */}
-                {status === "pending" && (
-                  <button
-                    disabled
-                    className="w-full mt-3 py-2 rounded-lg font-semibold bg-yellow-400 text-gray-800 cursor-not-allowed"
-                  >
-                    Awaiting Approval
-                  </button>
-                )}
+                  {/* Content */}
+                  <div className="p-6 space-y-5">
+                    <h3 className="text-xl font-bold line-clamp-2">{booking.title}</h3>
 
-                {/* Accepted */}
-                {status === "accepted" && !departurePassed && (
-                  <button
-                    className="w-full mt-3 py-2 rounded-lg font-semibold text-white bg-linear-to-r from-blue-500 to-blue-700 hover:opacity-90 transition"
-                    onClick={() => alert("Stripe payment here")}
-                  >
-                    Pay Now
-                  </button>
-                )}
+                    {/* Route */}
+                    <div className="flex items-center gap-3 text-lg">
+                      <FaMapMarkerAlt className="text-orange-500" />
+                      <span>
+                        {booking.from} → {booking.to}
+                      </span>
+                    </div>
 
-                {/* Paid */}
-                {status === "paid" && (
-                  <button
-                    disabled
-                    className="w-full mt-3 py-2 rounded-lg font-semibold bg-green-500 text-white cursor-not-allowed"
-                  >
-                    Payment Complete
-                  </button>
-                )}
+                    {/* Date & Time */}
+                    <div className="flex items-center gap-3 text-sm opacity-90">
+                      <FaCalendarAlt className="text-purple-500" />
+                      <span>
+                        {new Date(booking.ticketDate).toLocaleDateString("en-GB")} • {booking.time}
+                      </span>
+                    </div>
 
-                {/* Time passed */}
-                {status === "accepted" && departurePassed && (
-                  <p className="text-red-500 font-medium text-sm mt-2">
-                    Departure time passed. Payment disabled.
-                  </p>
-                )}
+                    {/* Tickets & Price */}
+                    <div className="flex justify-between items-center pt-3 border-t border-gray-600/30 dark:border-gray-300/20">
+                      <div className="flex items-center gap-2">
+                        <FaTicketAlt className="text-yellow-500" />
+                        <span className="font-medium">{booking.quantity} Ticket{booking.quantity > 1 ? "s" : ""}</span>
+                      </div>
+                      <div className="text-2xl font-bold text-orange-500">
+                        {booking.totalPrice} Tk
+                      </div>
+                    </div>
 
-                {/* Rejected */}
-                {status === "rejected" && (
-                  <p className="text-red-400 text-sm mt-2 font-medium">
-                    This booking was rejected.
-                  </p>
-                )}
-              </div>
-            </div>
-          );
-        })}
+                    {/* Countdown or Status Message */}
+                    {status !== "rejected" && !isExpired && status !== "paid" && (
+                      <div className="flex items-center justify-center gap-3 py-3 bg-orange-500/10 dark:bg-orange-900/30 rounded-xl border border-orange-500/30">
+                        <FaHourglassHalf className="text-orange-500 animate-pulse" /> Time Left:
+                        <Countdown date={booking.ticketDate} />
+                      </div>
+                    )}
+
+                    {/* Action Button / Status */}
+                    <div className="pt-4">
+                      {status === "pending" && (
+                        <button disabled className="w-full py-4 rounded-xl font-bold text-yellow-600 bg-yellow-500/20 border border-yellow-500/40 cursor-not-allowed">
+                          Awaiting Approval
+                        </button>
+                      )}
+
+                      {status === "approved" && !isExpired && (
+                        <button className="w-full py-4 rounded-xl font-bold text-white bg-linear-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg transform transition active:scale-95">
+                          Pay Now
+                        </button>
+                      )}
+
+                      {status === "paid" && (
+                        <button disabled className="w-full py-4 rounded-xl font-bold text-white bg-linear-to-r from-green-500 to-emerald-600 opacity-90 cursor-not-allowed shadow-lg">
+                          Payment Completed
+                        </button>
+                      )}
+
+                      {(isExpired && status !== "paid") && (
+                        <div className="text-center py-4 rounded-xl bg-red-500/20 border border-red-500/40 text-red-500 font-bold">
+                          Trip Expired
+                        </div>
+                      )}
+
+                      {status === "rejected" && (
+                        <div className="text-center py-4 rounded-xl bg-red-500/20 border border-red-500/40 text-red-500 font-bold">
+                          Booking Rejected
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+        )}
       </div>
     </div>
   );

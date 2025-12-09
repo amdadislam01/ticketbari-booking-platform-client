@@ -27,7 +27,7 @@ const AddTicket = () => {
     formState: { errors },
     reset,
   } = useForm();
-  // Added Ticket
+
   const handelAddedTicket = (data) => {
     if (!ticketAddedDate) {
       Swal.fire("Error", "Please select a valid date!", "error");
@@ -52,9 +52,7 @@ const AddTicket = () => {
 
     axios
       .post(
-        `https://api.imgbb.com/1/upload?&key=${
-          import.meta.env.VITE_IMAGE_HOST
-        }`,
+        `https://api.imgbb.com/1/upload?&key=${import.meta.env.VITE_IMAGE_HOST}`,
         formData
       )
       .then((res) => {
@@ -75,9 +73,7 @@ const AddTicket = () => {
           }
         });
       })
-      .catch((error) => {
-        console.log(error);
-      });
+      .catch((error) => console.log(error));
   };
 
   return (
@@ -85,32 +81,31 @@ const AddTicket = () => {
       initial={{ opacity: 0, y: 40 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className={`max-w-4xl mx-auto rounded-xl shadow-xl p-8 my-10
+      className={`max-w-5xl mx-auto rounded-xl shadow-xl p-6 sm:p-8 my-8
         ${
           isDarkMode
             ? "bg-gray-900 border border-dashed text-gray-100"
             : "bg-white text-gray-800"
-        }
-      `}
+        }`}
     >
-      <h2 className="text-3xl font-bold text-center text-orange-600 mb-8">
+      <h2 className="text-2xl sm:text-3xl font-bold text-center text-orange-600 mb-6 sm:mb-8">
         Add a New Ticket
       </h2>
 
       <form
         onSubmit={handleSubmit(handelAddedTicket)}
-        className="grid grid-cols-2 gap-6"
+        className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6"
       >
         {/* Title */}
-        <div className="col-span-2">
+        <div className="col-span-1 sm:col-span-2">
           <label className="font-semibold">Ticket Title</label>
           <input
             {...register("title", { required: "Title is required" })}
             placeholder="Enter ticket title"
-            className="input-box"
+            className="input-box w-full"
           />
           {errors.title && (
-            <p className="text-red-500">{errors.title.message}</p>
+            <p className="text-red-500 text-sm">{errors.title.message}</p>
           )}
         </div>
 
@@ -120,7 +115,7 @@ const AddTicket = () => {
           <input
             {...register("from", { required: true })}
             placeholder="Dhaka"
-            className="input-box"
+            className="input-box w-full"
           />
         </div>
 
@@ -130,7 +125,7 @@ const AddTicket = () => {
           <input
             {...register("to", { required: true })}
             placeholder="Chittagong"
-            className="input-box"
+            className="input-box w-full"
           />
         </div>
 
@@ -139,7 +134,7 @@ const AddTicket = () => {
           <label className="font-semibold">Transport Type</label>
           <select
             {...register("transport", { required: true })}
-            className="input-box"
+            className="input-box w-full"
           >
             <option value="">Select Transport</option>
             <option>Bus</option>
@@ -156,7 +151,7 @@ const AddTicket = () => {
             type="number"
             {...register("price", { required: true })}
             placeholder="1200"
-            className="input-box"
+            className="input-box w-full"
           />
         </div>
 
@@ -167,7 +162,7 @@ const AddTicket = () => {
             type="number"
             {...register("quantity", { required: true })}
             placeholder="50"
-            className="input-box"
+            className="input-box w-full"
           />
         </div>
 
@@ -179,7 +174,7 @@ const AddTicket = () => {
             onChange={(date) => setTicketAddedDate(date)}
             minDate={new Date()}
             placeholderText="Select Ticket Date"
-            className="input-box"
+            className="input-box w-full"
             dateFormat="yyyy-MM-dd"
           />
         </div>
@@ -196,34 +191,37 @@ const AddTicket = () => {
             timeCaption="Time"
             dateFormat="hh:mm:ss aa"
             placeholderText="Select Time"
-            className="input-box"
+            className="input-box w-full"
           />
         </div>
 
         {/* Perks */}
-        <div className="col-span-2">
+        <div className="col-span-1 sm:col-span-2">
           <label className="font-semibold block">Perks</label>
-          <div className="flex gap-6 mt-2">
-            <label>
+          <div className="flex flex-wrap gap-4 mt-2">
+            <label className="flex items-center gap-1">
               <input type="checkbox" {...register("perks")} value="AC" /> AC
             </label>
-            <label>
+            <label className="flex items-center gap-1">
               <input type="checkbox" {...register("perks")} value="Breakfast" />{" "}
               Breakfast
             </label>
-            <label>
+            <label className="flex items-center gap-1">
               <input type="checkbox" {...register("perks")} value="Wifi" /> Wifi
             </label>
           </div>
         </div>
 
         {/* Upload */}
-        <div className="col-span-2">
+        <div className="col-span-1 sm:col-span-2">
           <label className="font-semibold">Upload Ticket Image</label>
           <label
-            className={`upload-box border border-dashed rounded-xl p-5 text-center cursor-pointer block
-      ${isDarkMode ? "border-gray-700 bg-gray-800" : "border-gray-300 bg-white"}
-    `}
+            className={`upload-box border border-dashed rounded-xl p-5 text-center cursor-pointer block w-full
+              ${
+                isDarkMode
+                  ? "border-gray-700 bg-gray-800"
+                  : "border-gray-300 bg-white"
+              }`}
           >
             <input
               type="file"
@@ -235,14 +233,14 @@ const AddTicket = () => {
               }}
             />
 
-            <FaCloudUploadAlt className="text-5xl mx-auto mt-3" />
+            <FaCloudUploadAlt className="text-4xl sm:text-5xl mx-auto mt-3" />
 
-            <p className="mt-2">Click to upload image</p>
+            <p className="mt-2 text-sm sm:text-base">Click to upload image</p>
 
             {imgPreview && (
               <img
                 src={imgPreview}
-                className="w-28 h-28 object-cover rounded-xl mx-auto mt-4 shadow"
+                className="w-24 h-24 sm:w-28 sm:h-28 object-cover rounded-xl mx-auto mt-4 shadow"
               />
             )}
           </label>
@@ -255,7 +253,7 @@ const AddTicket = () => {
             value={user?.displayName}
             {...register("vendorName", { required: true })}
             readOnly
-            className="input-box bg-gray-200 dark:bg-gray-700"
+            className="input-box bg-gray-200 dark:bg-gray-700 w-full"
           />
         </div>
 
@@ -265,21 +263,20 @@ const AddTicket = () => {
             value={user?.email}
             {...register("vendorEmail", { required: true })}
             readOnly
-            className="input-box bg-gray-200 dark:bg-gray-700"
+            className="input-box bg-gray-200 dark:bg-gray-700 w-full"
           />
         </div>
 
         {/* Submit */}
-        <div className="col-span-2">
+        <div className="col-span-1 sm:col-span-2">
           <button
             disabled={role === "fraud"}
-            className={`w-full py-3 text-lg font-semibold rounded-xl transition-all 
-    ${
-      role === "fraud"
-        ? "bg-gray-400 cursor-not-allowed text-gray-700"
-        : "bg-orange-600 hover:bg-orange-700 text-white cursor-pointer"
-    }
-  `}
+            className={`w-full py-3 text-base sm:text-lg font-semibold rounded-xl transition-all 
+              ${
+                role === "fraud"
+                  ? "bg-gray-400 cursor-not-allowed text-gray-700"
+                  : "bg-orange-600 hover:bg-orange-700 text-white cursor-pointer"
+              }`}
           >
             Add Ticket
           </button>

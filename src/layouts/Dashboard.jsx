@@ -14,6 +14,7 @@ import Profile from "../pages/Dashboard/Profile/Profile";
 import MyAddedTicket from "../pages/Dashboard/MyAddedTicket/MyAddedTicket";
 import ManageTickets from "../pages/Dashboard/ManageTickets/ManageTickets";
 import ManageUsers from "../pages/Dashboard/ManageUsers/ManageUsers";
+import MyAddedBooking from "../pages/Dashboard/MyAddedBooking/MyAddedBooking";
 
 const Dashboard = () => {
   const { role } = useRole();
@@ -29,19 +30,20 @@ const Dashboard = () => {
     localStorage.setItem("dashboardActive", key);
   };
 
-  //  ROLE BASED  
+  // ROLE BASED 
+
   const menuItems =
-    role === "user" || role === "fraud"
+    role === "user"
       ? [
           { key: "profile", label: "Profile", icon: <FaUser /> },
-          { key: "tickets", label: "My Booked Tickets", icon: <FaTicketAlt /> },
+          { key: "book-tickets", label: "My Booked Tickets", icon: <FaTicketAlt /> },
           {
             key: "transactions",
             label: "Transaction History",
             icon: <FaHistory />,
           },
         ]
-      : role === "vendor"
+      : (role === "vendor" || role === "fraud")
       ? [
           { key: "profile", label: "Profile", icon: <FaUser /> },
           { key: "added-ticket", label: "Add Ticket", icon: <VscDiffAdded /> },
@@ -163,11 +165,19 @@ const Dashboard = () => {
 
         {/* PAGE CONTENT */}
         <main className="flex-1 p-5 md:p-8">
+          {role === "fraud" && (
+            <div className="p-4 mb-4 bg-red-100 text-red-700 rounded-lg">
+               You are marked as <strong>FRAUD</strong>.  
+              You cannot add or manage tickets anymore.
+            </div>
+          )}
+
           {active === "profile" && <Profile />}
-          {active === "added-ticket" && <AddedTickets />}
+          {active === "added-ticket" && <AddedTickets role={role} />}
           {active === "my-tickets" && <MyAddedTicket />}
           {active === "manage-tickets" && <ManageTickets />}
           {active === "manage-users" && <ManageUsers />}
+          {active === "book-tickets" && <MyAddedBooking />}
         </main>
       </div>
     </div>

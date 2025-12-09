@@ -9,9 +9,11 @@ import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import Swal from "sweetalert2";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import useRole from "../../../hooks/useRole";
 
 const AddTicket = () => {
   const { user } = UseAuth();
+  const { role } = useRole();
   const axiosSecure = useAxiosSecure();
   const { isDarkMode } = useTheme();
   const [imgPreview, setImgPreview] = useState("");
@@ -50,7 +52,9 @@ const AddTicket = () => {
 
     axios
       .post(
-        `https://api.imgbb.com/1/upload?&key=${import.meta.env.VITE_IMAGE_HOST}`,
+        `https://api.imgbb.com/1/upload?&key=${
+          import.meta.env.VITE_IMAGE_HOST
+        }`,
         formData
       )
       .then((res) => {
@@ -204,11 +208,7 @@ const AddTicket = () => {
               <input type="checkbox" {...register("perks")} value="AC" /> AC
             </label>
             <label>
-              <input
-                type="checkbox"
-                {...register("perks")}
-                value="Breakfast"
-              />{" "}
+              <input type="checkbox" {...register("perks")} value="Breakfast" />{" "}
               Breakfast
             </label>
             <label>
@@ -271,7 +271,16 @@ const AddTicket = () => {
 
         {/* Submit */}
         <div className="col-span-2">
-          <button className="w-full py-3 text-lg font-semibold bg-orange-600 hover:bg-orange-700 text-white rounded-xl transition-all cursor-pointer">
+          <button
+            disabled={role === "fraud"}
+            className={`w-full py-3 text-lg font-semibold rounded-xl transition-all 
+    ${
+      role === "fraud"
+        ? "bg-gray-400 cursor-not-allowed text-gray-700"
+        : "bg-orange-600 hover:bg-orange-700 text-white cursor-pointer"
+    }
+  `}
+          >
             Add Ticket
           </button>
         </div>

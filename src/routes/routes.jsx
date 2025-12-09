@@ -6,6 +6,8 @@ import Login from "../auth/Login/Login";
 import Register from "../auth/Register/Register";
 import Dashboard from "../layouts/Dashboard";
 import PrivetRoutes from "./PrivetRoutes";
+import AllTickets from "../pages/AllTickets/AllTickets";
+import TicketDetails from "../pages/TicketDetails/TicketDetails";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -24,6 +26,14 @@ export const router = createBrowserRouter([
         path: "/register",
         Component: Register,
       },
+      {
+        path: '/all-tickets',
+        element: <PrivetRoutes><AllTickets /></PrivetRoutes>
+      },
+      {
+        path: '/all-tickets/:id',
+        element: <PrivetRoutes><TicketDetails /></PrivetRoutes>
+      }
     ],
   },
   {

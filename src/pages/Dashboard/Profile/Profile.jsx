@@ -6,6 +6,7 @@ import { useTheme } from "../../../context/ThemeContext/ThemeContext";
 import useRole from "../../../hooks/useRole";
 import {  FaEnvelope, FaIdBadge, FaCalendarCheck, FaBan, FaShieldAlt } from "react-icons/fa";
 import Loading from "../../../components/Loading/Loading";
+import { Link } from "react-router";
 
 const Profile = () => {
   const { user, loading: authLoading } = UseAuth();
@@ -82,7 +83,7 @@ const Profile = () => {
                 </div>
 
                 <div className="text-center mt-6">
-                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+                  <h2 className={`text-2xl font-bold ${isDarkMode ? "text-gray-300" : "text-gray-800"}`}>
                     {userData?.displayName || user?.displayName || "Traveler"}
                   </h2>
                   <p className="text-gray-500">@{userData?.username || user?.email?.split("@")[0]}</p>
@@ -175,10 +176,10 @@ const Profile = () => {
             }`}>
               <h3 className="text-2xl font-bold mb-6 text-orange-500">Account Actions</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                <button className="group relative overflow-hidden px-8 py-5 bg-linear-to-r from-yellow-500 to-orange-500 text-white font-bold text-lg rounded-2xl shadow-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300">
+                <Link to={'/my-profile'} className="group relative overflow-hidden px-8 py-5 bg-linear-to-r from-yellow-500 to-orange-500 text-white font-bold text-lg rounded-2xl shadow-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300">
                   <span className="relative z-10">Edit Profile</span>
                   <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition"></div>
-                </button>
+                </Link>
 
                 <button className="group relative overflow-hidden px-8 py-5 bg-linear-to-r from-gray-700 to-gray-900 dark:from-gray-800 dark:to-black text-white font-bold text-lg rounded-2xl shadow-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300">
                   <span className="relative z-10">Security Settings</span>

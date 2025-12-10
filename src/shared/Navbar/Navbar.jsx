@@ -95,7 +95,7 @@ const Navbar = () => {
                 >
                     <h3 className="text-center mb-2">{user.displayName}</h3>
                   <Link
-                    to="/dashboard"
+                    to="/my-profile"
                     className="block px-4 py-2 rounded-md hover:bg-orange-500 hover:text-white"
                   >
                     Profile
@@ -177,7 +177,7 @@ const Navbar = () => {
           ) : (
             <>
               <Link
-                to="/dashboard"
+                to="/my-profile"
                 onClick={() => setMenuOpen(false)}
                 className="px-4 py-2 rounded-lg hover:bg-orange-500 hover:text-white"
               >

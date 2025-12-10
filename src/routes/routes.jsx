@@ -8,6 +8,7 @@ import Dashboard from "../layouts/Dashboard";
 import PrivetRoutes from "./PrivetRoutes";
 import AllTickets from "../pages/AllTickets/AllTickets";
 import TicketDetails from "../pages/TicketDetails/TicketDetails";
+import MyProfile from "../components/MyProfile/MyProfile";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -29,6 +30,10 @@ export const router = createBrowserRouter([
       {
         path: '/all-tickets',
         element: <PrivetRoutes><AllTickets /></PrivetRoutes>
+      },
+      {
+        path: '/my-profile',
+        element: <PrivetRoutes><MyProfile /></PrivetRoutes>
       },
       {
         path: '/all-tickets/:id',

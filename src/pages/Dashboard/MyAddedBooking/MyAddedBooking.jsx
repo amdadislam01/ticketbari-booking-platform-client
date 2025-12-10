@@ -11,6 +11,7 @@ import {
 } from "react-icons/fa";
 import Loading from "../../../components/Loading/Loading";
 import { motion } from "framer-motion";
+import { useParams } from "react-router";
 
 // Reusable Countdown
 const Countdown = ({ date }) => {
@@ -49,6 +50,7 @@ const Countdown = ({ date }) => {
 };
 
 const MyAddedBooking = () => {
+  const { ticketId } = useParams();
   const axiosSecure = useAxiosSecure();
   const { isDarkMode } = useTheme();
   const { user } = UseAuth();
@@ -61,6 +63,29 @@ const MyAddedBooking = () => {
     },
     enabled: !!user?.email,
   });
+
+
+const handlePayment = async (booking) => {
+  try {
+    const paymentInfo = {
+      totalPrice: booking.totalPrice,
+      ticketId: booking._id,
+      title: booking.title,
+      senderEmail: booking.userEmail,
+    };
+
+    console.log("PAYMENT INFO SENT:", paymentInfo);
+
+    const res = await axiosSecure.post("/checkout-payment", paymentInfo);
+    window.location.href = res.data.url;
+  } catch (error) {
+    console.error("Payment failed:", error);
+    alert("Payment failed: " + error?.response?.data?.message || error.message);
+  }
+};
+
+
+
 
   if (isLoading) return <Loading />;
 
@@ -183,7 +208,7 @@ const MyAddedBooking = () => {
                       )}
 
                       {status === "approved" && !isExpired && (
-                        <button className="w-full py-4 rounded-xl font-bold text-white bg-linear-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg transform transition active:scale-95">
+                        <button onClick={() => handlePayment(booking)} className="w-full py-4 rounded-xl font-bold text-white bg-linear-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg transform transition active:scale-95">
                           Pay Now
                         </button>
                       )}

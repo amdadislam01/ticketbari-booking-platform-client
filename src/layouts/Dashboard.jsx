@@ -16,6 +16,7 @@ import ManageTickets from "../pages/Dashboard/ManageTickets/ManageTickets";
 import ManageUsers from "../pages/Dashboard/ManageUsers/ManageUsers";
 import MyAddedBooking from "../pages/Dashboard/MyAddedBooking/MyAddedBooking";
 import RequestedBooking from "../pages/Dashboard/RequestedBooking/RequestedBooking";
+import Transactions from "../pages/Dashboard/Transactions/Transactions";
 
 const Dashboard = () => {
   const { role } = useRole();
@@ -201,7 +202,7 @@ const Dashboard = () => {
           {active === "manage-tickets" && <ManageTickets />}
           {active === "manage-users" && <ManageUsers />}
           {active === "book-tickets" && <MyAddedBooking />}
-          {active === "transactions" && <div>Transaction History (Coming Soon)</div>}
+          {active === "transactions" && <Transactions />}
           {active === "revenue-overview" && <div>Revenue Overview (Coming Soon)</div>}
           {active === "advertise-tickets" && <div>Advertise Tickets (Coming Soon)</div>}
         </main>

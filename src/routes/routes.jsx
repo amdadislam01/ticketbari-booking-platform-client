@@ -9,6 +9,8 @@ import PrivetRoutes from "./PrivetRoutes";
 import AllTickets from "../pages/AllTickets/AllTickets";
 import TicketDetails from "../pages/TicketDetails/TicketDetails";
 import MyProfile from "../components/MyProfile/MyProfile";
+import PaymentSuccess from "../pages/Dashboard/Payment/PaymentSuccess";
+import PaymentCencel from "../pages/Dashboard/Payment/PaymentCencel";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -28,21 +30,45 @@ export const router = createBrowserRouter([
         Component: Register,
       },
       {
-        path: '/all-tickets',
-        element: <PrivetRoutes><AllTickets /></PrivetRoutes>
+        path: "/all-tickets",
+        element: (
+          <PrivetRoutes>
+            <AllTickets />
+          </PrivetRoutes>
+        ),
       },
       {
-        path: '/my-profile',
-        element: <PrivetRoutes><MyProfile /></PrivetRoutes>
+        path: "/my-profile",
+        element: (
+          <PrivetRoutes>
+            <MyProfile />
+          </PrivetRoutes>
+        ),
       },
       {
-        path: '/all-tickets/:id',
-        element: <PrivetRoutes><TicketDetails /></PrivetRoutes>
-      }
+        path: "/all-tickets/:id",
+        element: (
+          <PrivetRoutes>
+            <TicketDetails />
+          </PrivetRoutes>
+        ),
+      },
     ],
   },
   {
-    path: '/dashboard',
-    element: <PrivetRoutes><Dashboard /></PrivetRoutes>
+    path: "/dashboard",
+    element: (
+      <PrivetRoutes>
+        <Dashboard />
+      </PrivetRoutes>
+    ),
+  },
+  {
+    path: "payment-success",
+    element: <PaymentSuccess></PaymentSuccess>,
+  },
+  {
+    path: "payment-cancelled",
+    element: <PaymentCencel></PaymentCencel>,
   },
 ]);

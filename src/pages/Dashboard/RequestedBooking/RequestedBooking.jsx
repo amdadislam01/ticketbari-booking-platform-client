@@ -22,6 +22,7 @@ import Loading from "../../../components/Loading/Loading";
 const RequestedBooking = () => {
   const axiosSecure = useAxiosSecure();
   const { isDarkMode } = useTheme();
+  const [bookingStatus, setBookingStatus] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
 
@@ -78,6 +79,7 @@ const RequestedBooking = () => {
   const handleAccept = async (id) => {
     try {
       await axiosSecure.patch(`/booking/status/${id}`, { status: "approved" });
+      setBookingStatus((prev) => ({ ...prev, [id]: "approved" }));
       Swal.fire({
         title: "Approved!",
         text: "Booking has been approved",
@@ -94,6 +96,7 @@ const RequestedBooking = () => {
   const handleReject = async (id) => {
     try {
       await axiosSecure.patch(`/booking/status/${id}`, { status: "rejected" });
+      setBookingStatus((prev) => ({ ...prev, [id]: "rejected" }));
       Swal.fire({
         title: "Rejected!",
         text: "Booking has been rejected",
@@ -158,6 +161,7 @@ const RequestedBooking = () => {
                   <Hourglass className="w-12 h-12 text-amber-500/20" />
                 </div>
               </div>
+
               <div
                 className={`p-5 rounded-2xl border ${
                   isDarkMode
@@ -175,6 +179,7 @@ const RequestedBooking = () => {
                   <CheckCircle2 className="w-12 h-12 text-emerald-500/20" />
                 </div>
               </div>
+
               <div
                 className={`p-5 rounded-2xl border ${
                   isDarkMode
@@ -196,13 +201,13 @@ const RequestedBooking = () => {
           </div>
         </div>
 
-        {/*  Table */}
+        {/* TABLE */}
         <div className="hidden lg:block px-6 lg:px-10 pb-8">
-          <div className="overflow-hidden rounded-xl border border-gray-300 ${isDarkMode ? 'border-gray-700' : 'border-gray-200'} shadow-xl">
+          <div className="overflow-hidden rounded-xl border border-gray-300 shadow-xl">
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead
-                  className={`border-b border-gray-300 ${
+                  className={`border-b ${
                     isDarkMode ? "border-gray-700" : "border-gray-200"
                   }`}
                 >
@@ -219,7 +224,6 @@ const RequestedBooking = () => {
                         className={`px-6 py-4 font-medium uppercase tracking-wider ${mutedText} ${
                           h === "Actions" ? "text-center" : ""
                         }`}
-                        style={h === "Actions" ? { width: "180px" } : {}}
                       >
                         <div className="flex items-center justify-center gap-2">
                           {h === "User" && <User className="w-4 h-4" />}
@@ -249,90 +253,124 @@ const RequestedBooking = () => {
                   ) : paginatedBookings.length === 0 ? (
                     <tr>
                       <td colSpan="5" className="px-6 py-20 text-center">
-                        <Ticket
-                          className={`mx-auto w-16 h-16 ${mutedText} mb-4`}
-                        />
+                        <Ticket className={`mx-auto w-16 h-16 ${mutedText}`} />
                         <p className="text-xl font-medium">
                           No pending requests
-                        </p>
-                        <p className={`text-sm ${mutedText} mt-2`}>
-                          All caught up!
                         </p>
                       </td>
                     </tr>
                   ) : (
-                    paginatedBookings.map((booking, i) => (
-                      <tr
-                        key={booking._id}
-                        className={`${
-                          i % 2 === 0
-                            ? isDarkMode
-                              ? "bg-gray-800/30"
-                              : "bg-gray-50"
-                            : ""
-                        } ${hoverBg} transition-all`}
-                      >
-                        <td className="px-6 py-5">
-                          <div className="flex items-center gap-3">
-                            <div className="w-12 h-12 rounded-full bg-linear-to-br from-orange-500 to-pink-600 flex items-center justify-center text-white font-bold text-lg shadow-lg">
-                              {booking.userName?.[0]?.toUpperCase() || "U"}
-                            </div>
-                            <div>
-                              <div className="font-semibold">
-                                {booking.userName}
+                    paginatedBookings.map((booking, i) => {
+                      const isDisabled =
+                        bookingStatus[booking._id] ||
+                        booking.status === "approved" ||
+                        booking.status === "rejected" ||
+                        booking.status === "paid";
+
+                      return (
+                        <tr
+                          key={booking._id}
+                          className={`${
+                            i % 2 === 0
+                              ? isDarkMode
+                                ? "bg-gray-800/30"
+                                : "bg-gray-50"
+                              : ""
+                          } ${hoverBg} transition-all`}
+                        >
+                          <td className="px-6 py-5">
+                            <div className="flex items-center gap-3">
+                              <div className="w-12 h-12 rounded-full bg-linear-to-br from-orange-500 to-pink-600 flex items-center justify-center text-white font-bold text-lg shadow-lg">
+                                {booking.userName?.[0]?.toUpperCase()}
                               </div>
-                              <div className={`text-xs ${mutedText}`}>
-                                {booking.userEmail}
+                              <div>
+                                <div className="font-semibold">
+                                  {booking.userName}
+                                </div>
+                                <div className={`text-xs ${mutedText}`}>
+                                  {booking.userEmail}
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        </td>
+                          </td>
 
-                        <td className="px-6 py-5 font-medium">
-                          {booking.title}
-                        </td>
+                          <td className="px-6 py-5 font-medium">
+                            {booking.title}
+                          </td>
 
-                        <td className="px-6 py-5 text-center">
-                          <span
-                            className={`px-4 py-2 rounded-full text-sm font-bold ${
-                              isDarkMode
-                                ? "bg-blue-900/50 text-blue-300"
-                                : "bg-blue-100 text-blue-800"
-                            }`}
-                          >
-                            {booking.quantity}
-                          </span>
-                        </td>
-
-                        <td className="px-6 py-5 text-center">
-                          <span className="text-xl font-bold text-green-500">
-                            {(
-                              booking.totalPrice * booking.quantity
-                            ).toLocaleString()}{" "}
-                            Tk
-                          </span>
-                        </td>
-
-                        <td className="px-6 py-5">
-                          <div className="flex justify-center gap-3">
-                            <button
-                              onClick={() => handleAccept(booking._id)}
-                              className="flex items-center gap-2 px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-medium shadow-md hover:shadow-lg transition-all"
+                          <td className="px-6 py-5 text-center">
+                            <span
+                              className={`px-4 py-2 rounded-full text-sm font-bold ${
+                                isDarkMode
+                                  ? "bg-blue-900/50 text-blue-300"
+                                  : "bg-blue-100 text-blue-800"
+                              }`}
                             >
-                              <CheckCircle className="w-5 h-5" />
-                              Accept
-                            </button>
-                            <button
-                              onClick={() => handleReject(booking._id)}
-                              className="flex items-center gap-2 px-5 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl font-medium shadow-md hover:shadow-lg transition-all"
-                            >
-                              <XCircle className="w-5 h-5" />
-                              Reject
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))
+                              {booking.quantity}
+                            </span>
+                          </td>
+
+                          <td className="px-6 py-5 text-center">
+                            <span className="text-xl font-bold text-green-500">
+                              {(
+                                booking.totalPrice * booking.quantity
+                              ).toLocaleString()}{" "}
+                              Tk
+                            </span>
+                          </td>
+
+                          <td className="px-6 py-5">
+                            <div className="flex justify-center gap-3">
+                              {/* ACCEPT  */}
+                              <button
+                                onClick={() => handleAccept(booking._id)}
+                                disabled={isDisabled}
+                                className={`
+                                  flex items-center gap-2 px-5 py-2 rounded-xl font-medium shadow-md transition-all
+                                  ${
+                                    bookingStatus[booking._id] === "approved" ||
+                                    booking.status === "approved"
+                                      ? "bg-cyan-600 text-white"
+                                      : "bg-emerald-600 hover:bg-emerald-700 text-white"
+                                  }
+                                  ${
+                                    isDisabled
+                                      ? "opacity-50 cursor-not-allowed"
+                                      : ""
+                                  }
+                                `}
+                              >
+                                <CheckCircle className="w-5 h-5" />
+                                Accept
+                              </button>
+
+                              {/* REJECT  */}
+                              <button
+                                onClick={() => handleReject(booking._id)}
+                                disabled={isDisabled}
+                                className={`
+                                  flex items-center gap-2 px-5 py-2 rounded-xl font-medium shadow-md transition-all
+                                  ${
+                                    bookingStatus[booking._id] === "rejected" ||
+                                    booking.status === "rejected"
+                                      ? "bg-red-800 text-white"
+                                      : "bg-red-600 hover:bg-red-700 text-white"
+                                  }
+                                  ${
+                                    isDisabled
+                                      ? "opacity-50 cursor-not-allowed"
+                                      : ""
+                                  }
+                                `}
+                              >
+                                <XCircle className="w-5 h-5" />
+                                Reject
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })
                   )}
                 </tbody>
               </table>
@@ -340,87 +378,113 @@ const RequestedBooking = () => {
           </div>
         </div>
 
-        {/* Mobile Table Card */}
+        {/* Mobile Table  */}
         <div className="block lg:hidden px-4 sm:px-6 pb-8">
           {isLoading ? (
             <Loading />
           ) : paginatedBookings.length === 0 ? (
             <div className="text-center py-20">
-              <Ticket className="mx-auto w-20 h-20 text-gray-400 mb-4" />
+              <Ticket className={`mx-auto w-20 h-20 ${mutedText} mb-4`} />
               <p className="text-xl font-semibold">No pending requests</p>
+              <p className={`text-sm ${mutedText} mt-2`}>All caught up!</p>
             </div>
           ) : (
             <div className="space-y-4">
-              {paginatedBookings.map((booking) => (
-                <div
-                  key={booking._id}
-                  className={`p-6 rounded-2xl border ${
-                    isDarkMode
-                      ? "bg-gray-800 border-gray-700"
-                      : "bg-white border-gray-200"
-                  } shadow-lg`}
-                >
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="w-14 h-14 rounded-full flex justify-center items-center bg-linear-to-br from-orange-500 to-pink-600 flex-center text-white font-bold text-xl shadow-lg">
-                      {booking.userName?.[0]?.toUpperCase() || "U"}
-                    </div>
-                    <div>
-                      <h3 className="font-bold text-lg">{booking.userName}</h3>
-                      <p className="text-sm text-gray-500">
-                        {booking.userEmail}
-                      </p>
-                    </div>
-                  </div>
+              {paginatedBookings.map((booking) => {
+                const isDisabled =
+                  bookingStatus[booking._id] ||
+                  booking.status === "approved" ||
+                  booking.status === "rejected" ||
+                  booking.status === "paid";
 
-                  <div className="space-y-3 text-sm">
-                    <div className="flex justify-between">
-                      <span className="text-gray-500">Ticket</span>
-                      <span className="font-medium">{booking.title}</span>
+                return (
+                  <div
+                    key={booking._id}
+                    className={`p-6 rounded-2xl border ${
+                      isDarkMode
+                        ? "bg-gray-800 border-gray-700"
+                        : "bg-white border-gray-200"
+                    } shadow-lg`}
+                  >
+                    <div className="flex items-center gap-4 mb-4">
+                      <div className="w-14 h-14 rounded-full flex justify-center items-center bg-linear-to-br from-orange-500 to-pink-600 text-white font-bold text-xl shadow-lg">
+                        {booking.userName?.[0]?.toUpperCase() || "U"}
+                      </div>
+                      <div>
+                        <h3 className="font-bold text-lg">
+                          {booking.userName}
+                        </h3>
+                        <p className="text-sm text-gray-500">
+                          {booking.userEmail}
+                        </p>
+                      </div>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-500">Quantity</span>
-                      <span
-                        className={`px-4 py-1 rounded-full font-bold ${
-                          isDarkMode
-                            ? "bg-blue-900/50 text-blue-300"
-                            : "bg-blue-100 text-blue-800"
-                        }`}
+
+                    <div className="space-y-3 text-sm">
+                      <div className="flex justify-between">
+                        <span className="text-gray-500">Ticket</span>
+                        <span className="font-medium">{booking.title}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-500">Quantity</span>
+                        <span
+                          className={`px-4 py-1 rounded-full font-bold ${
+                            isDarkMode
+                              ? "bg-blue-900/50 text-blue-300"
+                              : "bg-blue-100 text-blue-800"
+                          }`}
+                        >
+                          {booking.quantity}
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-500">Total</span>
+                        <span className="text-2xl font-bold text-green-500">
+                          {(
+                            booking.totalPrice * booking.quantity
+                          ).toLocaleString()}{" "}
+                          Tk
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="flex gap-3 mt-6">
+                      <button
+                        onClick={() => handleAccept(booking._id)}
+                        disabled={isDisabled}
+                        className={`flex-1 flex items-center justify-center gap-2 px-5 py-2 rounded-xl font-medium shadow-md transition-all ${
+                          bookingStatus[booking._id] === "approved" ||
+                          booking.status === "approved"
+                            ? "bg-emerald-600 text-white"
+                            : "bg-emerald-600 hover:bg-emerald-700 text-white"
+                        } ${isDisabled ? "opacity-50 cursor-not-allowed" : ""}`}
                       >
-                        {booking.quantity}
-                      </span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-500">Total</span>
-                      <span className="text-2xl font-bold text-green-500">
-                        {(
-                          booking.totalPrice * booking.quantity
-                        ).toLocaleString()}{" "}
-                        Tk
-                      </span>
-                    </div>
-                  </div>
+                        <CheckCircle className="w-5 h-5" />
+                        Accept
+                      </button>
 
-                  <div className="flex gap-3 mt-6">
-                    <button
-                      onClick={() => handleAccept(booking._id)}
-                      className="flex-1 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-medium flex items-center justify-center gap-2 transition"
-                    >
-                      <CheckCircle className="w-5 h-5" /> Accept
-                    </button>
-                    <button
-                      onClick={() => handleReject(booking._id)}
-                      className="flex-1 py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl font-medium flex items-center justify-center gap-2 transition"
-                    >
-                      <XCircle className="w-5 h-5" /> Reject
-                    </button>
+                      <button
+                        onClick={() => handleReject(booking._id)}
+                        disabled={isDisabled}
+                        className={`flex-1 flex items-center justify-center gap-2 px-5 py-2 rounded-xl font-medium shadow-md transition-all ${
+                          bookingStatus[booking._id] === "rejected" ||
+                          booking.status === "rejected"
+                            ? "bg-red-800 text-white"
+                            : "bg-red-600 hover:bg-red-700 text-white"
+                        } ${isDisabled ? "opacity-50 cursor-not-allowed" : ""}`}
+                      >
+                        <XCircle className="w-5 h-5" />
+                        Reject
+                      </button>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>
 
-        {/* Pagination */}
+        {/* PAGINATION */}
         {totalPages > 1 && (
           <div
             className={`p-4 border-t ${
@@ -433,6 +497,7 @@ const RequestedBooking = () => {
                 {Math.min(currentPage * itemsPerPage, totalItems)} of{" "}
                 {totalItems} requests
               </div>
+
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => goToPage(1)}
@@ -441,6 +506,7 @@ const RequestedBooking = () => {
                 >
                   <ChevronsLeft className="w-5 h-5" />
                 </button>
+
                 <button
                   onClick={() => goToPage(currentPage - 1)}
                   disabled={currentPage === 1}
@@ -481,6 +547,7 @@ const RequestedBooking = () => {
                 >
                   <ChevronRight className="w-5 h-5" />
                 </button>
+
                 <button
                   onClick={() => goToPage(totalPages)}
                   disabled={currentPage === totalPages}

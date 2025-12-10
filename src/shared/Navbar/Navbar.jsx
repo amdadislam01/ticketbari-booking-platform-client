@@ -7,7 +7,6 @@ import UseAuth from "../../hooks/UseAuth";
 
 const Navbar = () => {
   const { user, logoutUser } = UseAuth();
-  console.log(user);
   
   const { isDarkMode, toggleTheme } = useTheme();
   const [menuOpen, setMenuOpen] = useState(false);

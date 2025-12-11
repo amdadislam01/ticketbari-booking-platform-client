@@ -11,7 +11,6 @@ import {
 } from "react-icons/fa";
 import Loading from "../../../components/Loading/Loading";
 import { motion } from "framer-motion";
-import { useParams } from "react-router";
 
 // Reusable Countdown
 const Countdown = ({ date }) => {
@@ -50,7 +49,6 @@ const Countdown = ({ date }) => {
 };
 
 const MyAddedBooking = () => {
-  const { ticketId } = useParams();
   const axiosSecure = useAxiosSecure();
   const { isDarkMode } = useTheme();
   const { user } = UseAuth();

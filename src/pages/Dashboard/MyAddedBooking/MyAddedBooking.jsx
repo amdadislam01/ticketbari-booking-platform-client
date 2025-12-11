@@ -12,7 +12,7 @@ import {
 import Loading from "../../../components/Loading/Loading";
 import { motion } from "framer-motion";
 
-// Reusable Countdown
+//  Countdown Time
 const Countdown = ({ date }) => {
   const [countdown, setCountdown] = useState("");
 

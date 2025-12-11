@@ -46,7 +46,7 @@ const Transactions = () => {
   return (
     <div className={`min-h-screen ${isDarkMode ? "bg-gray-900" : ""}`}>
       {/* Header */}
-      <div className="bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
+      <div className="bg-linear-to-r from-orange-500 via-amber-500 to-yellow-500 px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
         <div className="max-w-7xl mx-auto text-center sm:text-left">
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-2">
             Transaction History
@@ -57,7 +57,6 @@ const Transactions = () => {
         </div>
       </div>
 
-      {/* Summary Cards */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 sm:-mt-10">
         {payments.length > 0 && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-10 sm:mb-14">
@@ -65,7 +64,9 @@ const Transactions = () => {
               {
                 title: "Total Transactions",
                 value: payments.length,
-                icon: <Hash className="w-6 h-6 sm:w-7 sm:h-7 text-orange-500" />,
+                icon: (
+                  <Hash className="w-6 h-6 sm:w-7 sm:h-7 text-orange-500" />
+                ),
                 color: "orange",
               },
               {
@@ -137,7 +138,7 @@ const Transactions = () => {
               : "bg-white/98 border-orange-200"
           }`}
         >
-          <div className="bg-gradient-to-r from-orange-500 to-amber-500 p-5 sm:p-6">
+          <div className="bg-linear-to-r from-orange-500 to-amber-500 p-5 sm:p-6">
             <h2 className="text-xl sm:text-2xl font-bold text-white">
               All Transactions
             </h2>
@@ -207,11 +208,11 @@ const Transactions = () => {
           </div>
 
           {/* Mobile Cards */}
-          <div className="md:hidden p-4 sm:p-6 space-y-4">
+          <div className="md:hidden mobile-wrapper p-4 space-y-4">
             {payments.length === 0 ? (
               <div className="text-center py-16">
-                <CreditCard className="w-20 h-20 mx-auto mb-4 text-orange-400 opacity-40" />
-                <p className="text-lg sm:text-xl font-medium text-orange-500 dark:text-orange-400">
+                <CreditCard className="w-16 h-16 mx-auto mb-4 text-orange-400 opacity-40" />
+                <p className="text-base font-medium text-orange-500 dark:text-orange-400">
                   No transactions found
                 </p>
               </div>
@@ -219,36 +220,36 @@ const Transactions = () => {
               payments.map((payment, index) => (
                 <div
                   key={payment._id}
-                  className={`rounded-xl p-5 shadow-md border transition-all ${
+                  className={`mobile-card rounded-xl p-4 shadow-md border transition-all ${
                     isDarkMode
                       ? "bg-gray-800/90 border-gray-700"
                       : "bg-white border-orange-200"
                   }`}
                 >
-                  <div className="flex justify-between items-start mb-3">
+                  <div className="flex justify-between items-start mb-2">
                     <div>
-                      <p className="text-xs text-orange-600 dark:text-orange-400 font-semibold">
+                      <p className="mobile-card-title text-xs text-orange-600 dark:text-orange-400 font-semibold">
                         Transaction #{index + 1}
                       </p>
-                      <p className="font-mono text-sm font-bold text-orange-600 dark:text-orange-400 mt-1">
+                      <p className="mobile-card-id font-mono text-xs font-bold text-orange-600 dark:text-orange-400 mt-1">
                         {payment.transactionId}
                       </p>
                     </div>
-                    <span className="text-xl font-bold text-amber-600 dark:text-amber-400">
+                    <span className="mobile-card-amount text-lg font-bold text-amber-600 dark:text-amber-400">
                       {formatCurrency(payment.amount)}
                     </span>
                   </div>
 
                   <h3
-                    className={`text-base sm:text-lg font-bold mb-3 ${
+                    className={`mobile-card-title text-sm font-bold mb-2 ${
                       isDarkMode ? "text-white" : "text-gray-900"
                     }`}
                   >
                     {payment.ticketName}
                   </h3>
 
-                  <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                    <Calendar className="w-4 h-4" />
+                  <div className="mobile-card-date flex items-center gap-2 text-xs text-gray-600 dark:text-gray-400">
+                    <Calendar className="w-3 h-3" />
                     {format(new Date(payment.paidAt), "dd MMM yyyy")}
                   </div>
                 </div>

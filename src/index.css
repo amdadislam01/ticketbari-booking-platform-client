@@ -94,3 +94,26 @@
   animation: slide-up 0.6s ease-out forwards;
   opacity: 0;
 }
+
+@media (max-width: 430px) {
+  .mobile-card {
+    padding: 12px !important;
+    border-radius: 14px !important;
+  }
+  .mobile-card-title {
+    font-size: 14px !important;
+  }
+  .mobile-card-id {
+    font-size: 11px !important;
+    word-break: break-all;
+  }
+  .mobile-card-amount {
+    font-size: 18px !important;
+  }
+  .mobile-card-date {
+    font-size: 12px !important;
+  }
+  .mobile-wrapper {
+    padding: 10px !important;
+  }
+}

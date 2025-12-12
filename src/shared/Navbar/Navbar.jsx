@@ -4,18 +4,21 @@ import { useTheme } from "../../context/ThemeContext/ThemeContext";
 import { FiSun, FiMoon } from "react-icons/fi";
 import { FaBars, FaTimes, FaBus } from "react-icons/fa";
 import UseAuth from "../../hooks/UseAuth";
+import { Home, Ticket, LayoutDashboard, Info, Phone } from "lucide-react";
 
 const Navbar = () => {
-  const { user, logoutUser } = UseAuth();
-  
+  const { user, loading, logoutUser } = UseAuth();
+
   const { isDarkMode, toggleTheme } = useTheme();
   const [menuOpen, setMenuOpen] = useState(false);
   const [profileMenu, setProfileMenu] = useState(false);
 
   const navItems = [
-    { name: "Home", path: "/" },
-    { name: "All Tickets", path: "/all-tickets" },
-    { name: "Dashboard", path: "/dashboard" },
+    { name: "Home", path: "/", icon: Home },
+    { name: "All Tickets", path: "/all-tickets", icon: Ticket },
+    { name: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
+    { name: "About", path: "/about", icon: Info },
+    { name: "Contact", path: "/contact", icon: Phone },
   ];
 
   return (
@@ -25,31 +28,38 @@ const Navbar = () => {
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+        {/* Logo */}
         <Link to="/" className="flex items-center gap-2 text-2xl font-bold">
           <FaBus className="text-yellow-500" />
           <span className="text-orange-500">TicketBari</span>
         </Link>
 
-        {/*  Menu */}
+        {/* Desktop Menu */}
         <div className="hidden md:flex items-center gap-6">
-          {navItems.map((item) => (
-            <NavLink
-              key={item.name}
-              to={item.path}
-              className={({ isActive }) =>
-                `px-4 py-2 rounded-lg font-medium transition ${
-                  isActive
-                    ? "bg-orange-500 text-white"
-                    : "hover:bg-yellow-100 hover:text-orange-600"
-                }`
-              }
-            >
-              {item.name}
-            </NavLink>
-          ))}
+          {navItems.map((item) => {
+            const Icon = item.icon;
+            return (
+              <NavLink
+                key={item.name}
+                to={item.path}
+                className={({ isActive }) =>
+                  `px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition ${
+                    isActive
+                      ? "bg-orange-500 text-white"
+                      : "hover:bg-yellow-100 hover:text-orange-600"
+                  }`
+                }
+              >
+                <Icon size={18} />
+                {item.name}
+              </NavLink>
+            );
+          })}
         </div>
 
+        {/* Desktop Right */}
         <div className="hidden md:flex items-center gap-4">
+          {/* Theme Toggle */}
           <button
             onClick={toggleTheme}
             className="p-2 rounded-full border border-orange-500 cursor-pointer"
@@ -57,8 +67,10 @@ const Navbar = () => {
             {isDarkMode ? <FiSun /> : <FiMoon />}
           </button>
 
-          {/* Users */}
-          {!user ? (
+          {/* User Profile */}
+          {loading ? (
+            <div className="w-10 h-10 border-4 border-orange-500 border-t-transparent rounded-full animate-spin"></div>
+          ) : !user ? (
             <div className="flex items-center gap-3">
               <Link
                 className="px-4 py-2 bg-orange-600 text-white rounded-lg"
@@ -74,13 +86,14 @@ const Navbar = () => {
               </Link>
             </div>
           ) : (
+            /* Logged In */
             <div className="relative">
               <button
                 onClick={() => setProfileMenu(!profileMenu)}
                 className="flex items-center gap-2"
               >
                 <img
-                  src={user?.photoURL || user.reloadUserInfo.photoUrl}
+                  src={user?.photoURL || user.reloadUserInfo?.photoUrl}
                   alt="image"
                   className="w-10 h-10 rounded-full border-2 border-yellow-500"
                 />
@@ -92,13 +105,15 @@ const Navbar = () => {
                     isDarkMode ? "bg-gray-800" : "bg-white"
                   }`}
                 >
-                    <h3 className="text-center mb-2">{user.displayName}</h3>
+                  <h3 className="text-center mb-2">{user.displayName}</h3>
+
                   <Link
                     to="/my-profile"
                     className="block px-4 py-2 rounded-md hover:bg-orange-500 hover:text-white"
                   >
                     Profile
                   </Link>
+
                   <button
                     onClick={logoutUser}
                     className="w-full text-left px-4 py-2 rounded-md hover:bg-red-500 hover:text-white"
@@ -111,7 +126,7 @@ const Navbar = () => {
           )}
         </div>
 
-        {/* Mobile Menu  */}
+        {/* Mobile Menu Button */}
         <button
           className="md:hidden text-3xl"
           onClick={() => setMenuOpen(!menuOpen)}
@@ -120,7 +135,7 @@ const Navbar = () => {
         </button>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile Sidebar */}
       <div
         className={`md:hidden fixed top-0 left-0 w-3/4 h-full shadow-lg transform transition-transform duration-300 ${
           menuOpen ? "translate-x-0" : "-translate-x-full"
@@ -134,23 +149,28 @@ const Navbar = () => {
             <FaTimes />
           </button>
 
-          {navItems.map((item) => (
-            <NavLink
-              key={item.name}
-              to={item.path}
-              onClick={() => setMenuOpen(false)}
-              className={({ isActive }) =>
-                `block px-4 py-3 rounded-lg text-lg ${
-                  isActive
-                    ? "bg-orange-500 text-white"
-                    : "hover:bg-yellow-100 hover:text-black"
-                }`
-              }
-            >
-              {item.name}
-            </NavLink>
-          ))}
+          {navItems.map((item) => {
+            const Icon = item.icon;
+            return (
+              <NavLink
+                key={item.name}
+                to={item.path}
+                onClick={() => setMenuOpen(false)}
+                className={({ isActive }) =>
+                  `block px-4 py-3 rounded-lg text-lg flex items-center gap-3 ${
+                    isActive
+                      ? "bg-orange-500 text-white"
+                      : "hover:bg-yellow-100 hover:text-black"
+                  }`
+                }
+              >
+                <Icon size={20} />
+                {item.name}
+              </NavLink>
+            );
+          })}
 
+          {/* Theme Toggle */}
           <button
             onClick={toggleTheme}
             className="px-4 py-2 rounded-lg border border-orange-500 w-full"
@@ -158,7 +178,10 @@ const Navbar = () => {
             {isDarkMode ? "Light Mode" : "Dark Mode"}
           </button>
 
-          {!user ? (
+          {/* Mobile Auth */}
+          {loading ? (
+            <div className="w-12 h-12 border-4 border-orange-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
+          ) : !user ? (
             <div className="flex flex-col gap-3">
               <Link
                 className="px-4 py-2 bg-orange-600 text-white rounded-lg text-center"
@@ -182,6 +205,7 @@ const Navbar = () => {
               >
                 Profile
               </Link>
+
               <button
                 onClick={logoutUser}
                 className="px-4 py-2 rounded-lg bg-red-500 text-white"

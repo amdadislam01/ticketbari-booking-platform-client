@@ -47,6 +47,14 @@ const Profile = () => {
     enabled: !!user?.email,
   });
 
+  const { data: allTickets = [] } = useQuery({
+    queryKey: ["tickets"],
+    queryFn: async () => {
+      const res = await axiosSecure.get("/added-ticket/approved");
+      return res.data;
+    },
+  });
+
   const formatCurrency = (amount) =>
     new Intl.NumberFormat("en-US", {
       style: "currency",
@@ -208,7 +216,7 @@ const Profile = () => {
                 },
                 {
                   label: "Active Tickets",
-                  value: userData?.length || 10,
+                  value: allTickets?.length || 0,
                   color: "from-blue-500 to-cyan-500",
                 },
                 {

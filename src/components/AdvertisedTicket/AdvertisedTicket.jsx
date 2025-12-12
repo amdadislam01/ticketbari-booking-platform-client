@@ -16,7 +16,7 @@ const AdvertisedTicket = () => {
   const axiosSecure = useAxiosSecure();
   const { isDarkMode } = useTheme();
 
-  const { data: tickets = [], isLoading, isError } = useQuery({
+  const { data: tickets = [], isLoading } = useQuery({
     queryKey: ["advertisedTickets"],
     queryFn: async () => {
       const res = await axiosSecure.get("/added-ticket/advertised");
@@ -28,9 +28,6 @@ const AdvertisedTicket = () => {
     return <Loading />
   }
 
-  if (isError) {
-    return <Loading />
-  }
 
   return (
     <div

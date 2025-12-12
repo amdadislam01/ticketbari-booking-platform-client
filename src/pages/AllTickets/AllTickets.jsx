@@ -39,6 +39,8 @@ const AllTickets = () => {
     setCurrentPage(page);
     window.scrollTo({ top: 400, behavior: "smooth" });
   };
+  console.log(isDarkMode);
+  
 
   return (
     <div

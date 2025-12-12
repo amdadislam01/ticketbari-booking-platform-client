@@ -57,7 +57,7 @@ const Navbar = () => {
           })}
         </div>
 
-        {/* Desktop Right */}
+        {/* Desktop  */}
         <div className="hidden md:flex items-center gap-4">
           {/* Theme Toggle */}
           <button

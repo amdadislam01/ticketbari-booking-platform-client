@@ -4,6 +4,7 @@ import 'swiper/css';
 import 'swiper/css/autoplay';
 import { Autoplay, Navigation, Pagination } from 'swiper/modules';
 import { useTheme } from '../../context/ThemeContext/ThemeContext';
+import { Link } from 'react-router';
 
 const slides = [
   {
@@ -44,10 +45,10 @@ const Hero = () => {
             >
               <div className="bg-black/40 p-6 md:p-12 rounded-xl text-center">
                 <h2 className="text-3xl md:text-5xl font-bold mb-4 text-yellow-400">{slide.title}</h2>
-                <p className="text-lg md:text-2xl text-white/90">{slide.description}</p>
-                <button className="mt-6 px-6 py-3 bg-yellow-400 text-orange-600 font-semibold rounded-lg hover:opacity-90 transition">
+                <p className="text-lg md:text-2xl text-white/90 mb-6">{slide.description}</p>
+                <Link to={'/all-tickets'} className="mt-10 px-6 py-3 bg-yellow-400 text-orange-600 font-semibold rounded-lg hover:opacity-90 transition">
                   Book Now
-                </button>
+                </Link>
               </div>
             </div>
           </SwiperSlide>

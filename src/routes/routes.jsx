@@ -12,6 +12,7 @@ import MyProfile from "../components/MyProfile/MyProfile";
 import PaymentSuccess from "../pages/Dashboard/Payment/PaymentSuccess";
 import PaymentCencel from "../pages/Dashboard/Payment/PaymentCencel";
 import About from "../components/About/About";
+import Contact from "../components/Contact/Contact";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -33,6 +34,10 @@ export const router = createBrowserRouter([
       {
         path: 'about',
         Component: About
+      },
+      {
+        path: 'contact',
+        Component: Contact
       },
       {
         path: "/all-tickets",

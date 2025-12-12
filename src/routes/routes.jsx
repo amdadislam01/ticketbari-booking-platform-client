@@ -11,6 +11,7 @@ import TicketDetails from "../pages/TicketDetails/TicketDetails";
 import MyProfile from "../components/MyProfile/MyProfile";
 import PaymentSuccess from "../pages/Dashboard/Payment/PaymentSuccess";
 import PaymentCencel from "../pages/Dashboard/Payment/PaymentCencel";
+import About from "../components/About/About";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -28,6 +29,10 @@ export const router = createBrowserRouter([
       {
         path: "/register",
         Component: Register,
+      },
+      {
+        path: 'about',
+        Component: About
       },
       {
         path: "/all-tickets",

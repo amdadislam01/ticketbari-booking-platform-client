@@ -196,16 +196,18 @@ const Dashboard = () => {
               You are marked as <strong>FRAUD</strong>. You cannot add or manage tickets anymore.
             </div>
           )}
-
+          {/* User Dashboard */}
           {active === "profile" && <Profile />}
-          {active === "added-ticket" && <AddedTickets role={role} />}
-          {active === "request-booking" && <RequestedBooking />}
-          {active === "my-tickets" && <MyAddedTicket />}
-          {active === "manage-tickets" && <ManageTickets />}
-          {active === "manage-users" && <ManageUsers />}
           {active === "book-tickets" && <MyAddedBooking />}
           {active === "transactions" && <Transactions />}
+          {/* Vendor Dashboard */}
+          {active === "added-ticket" &&  <AddedTickets role={role} />}
+          {active === "request-booking" && <RequestedBooking />}
+          {active === "my-tickets" && <MyAddedTicket />}
           {active === "revenue-overview" && <RevenueOverview />}
+          {/* Admin Dashboard */}
+          {active === "manage-users" && <ManageUsers />}
+          {active === "manage-tickets" && <ManageTickets />}        
           {active === "advertise-tickets" && <AdvertiseTickets />}
         </main>
       </div>

@@ -66,7 +66,7 @@ const About = () => {
       </section>
 
       {/*  OUR STORY  */}
-      <section className={`py-24 ${isDarkMode ? "bg-gray-800" : "bg-gray-50"}`}>
+      <section className={`py-24 ${isDarkMode ? "bg-gray-800" : "bg-white"}`}>
         <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-20 items-center">
           {/* Text */}
           <motion.div

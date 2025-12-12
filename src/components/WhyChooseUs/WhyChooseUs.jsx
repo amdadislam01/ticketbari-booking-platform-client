@@ -9,7 +9,7 @@ const fadeUp = {
 const WhyChooseUs = () => {
   const { isDarkMode } = useTheme();
   return (
-    <section className={`py-24 ${isDarkMode ? "bg-gray-900" : "bg-white"}`}>
+    <section className={`py-24 ${isDarkMode ? "bg-gray-900" : "bg-gray-50"}`}>
       <div className="max-w-7xl mx-auto px-6">
         <motion.h2
           initial="hidden"
@@ -17,15 +17,11 @@ const WhyChooseUs = () => {
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
           variants={fadeUp}
-          className={`text-4xl lg:text-5xl font-bold text-center mb-16 ${
-            isDarkMode ? "text-white" : "text-gray-900"
-          }`}
+          className="text-4xl sm:text-5xl md:text-6xl text-center mb-12 md:mb-16 font-extrabold tracking-tight leading-tight"
         >
-          Why Choose{" "}
-          <span className="text-transparent bg-clip-text bg-linear-to-r from-yellow-500 to-orange-600">
-            TicketBari
-          </span>
-          ?
+            <span className="bg-linear-to-r from-orange-500 via-pink-500 to-purple-600 bg-clip-text text-transparent">
+              Why Choose TicketBari ?
+            </span>
         </motion.h2>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-10">

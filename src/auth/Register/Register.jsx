@@ -20,6 +20,7 @@ import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { useNavigate } from "react-router";
 import axios from "axios";
 import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 
 const Register = () => {
   const {
@@ -43,44 +44,50 @@ const Register = () => {
 
   const handleRegister = (data) => {
     const profileImage = data.photo[0];
+
     createUser(data.email, data.password)
       .then((result) => {
-        console.log(result);
         const formData = new FormData();
         formData.append("image", profileImage);
+
         const imageAPI = `https://api.imgbb.com/1/upload?&key=${
           import.meta.env.VITE_IMAGE_HOST
         }`;
 
         axios.post(imageAPI, formData).then((res) => {
           const photoURL = res.data.data.url;
+
           const userInfo = {
             email: data.email,
             displayName: data.name,
             photoURL: photoURL,
           };
 
-          axiosSecure.post("/users", userInfo).then((res) => {
-            if (res.data.insertedId) {
-              console.log("User created in the database");
-            }
-          });
+          axiosSecure.post("/users", userInfo);
 
-          const userProfile = {
+          updateUserProfile({
             displayName: data.name,
             photoURL: photoURL,
-          };
-          updateUserProfile(userProfile)
-            .then(() => console.log("User Profile Updated"))
-            .catch((err) => console.log(err));
+          });
         });
 
-        toast.success("Register successful!");
+        Swal.fire({
+          icon: "success",
+          title: "Registration Successful!",
+          text: "Your account has been created",
+          timer: 2000,
+          showConfirmButton: false,
+        });
+
         navigate("/");
       })
       .catch((error) => {
         console.log(error);
-        toast.error("Register failed!");
+        Swal.fire({
+          icon: "error",
+          title: "Registration Failed!",
+          text: error.message,
+        });
       });
   };
 
@@ -95,17 +102,24 @@ const Register = () => {
           photoURL: loggedUser.photoURL,
         };
 
-        axiosSecure
-          .post("/users", userInfo)
-          .then((res) => console.log("Google user saved to DB:", res.data))
-          .catch((err) => console.log(err));
+        axiosSecure.post("/users", userInfo);
 
-        toast.success("Login successful!");
+        Swal.fire({
+          icon: "success",
+          title: "Login Successful!",
+          timer: 1500,
+          showConfirmButton: false,
+        });
+
         navigate("/");
       })
       .catch((error) => {
         console.log(error);
-        toast.error("Google login failed!");
+        Swal.fire({
+          icon: "error",
+          title: "Google Login Failed!",
+          text: error.message,
+        });
       });
   };
 

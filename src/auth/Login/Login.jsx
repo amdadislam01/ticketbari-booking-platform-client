@@ -15,6 +15,7 @@ import { useForm } from "react-hook-form";
 import UseAuth from "../../hooks/UseAuth";
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 
 const Login = () => {
   const {
@@ -31,12 +32,21 @@ const Login = () => {
     loginUser(data.email, data.password)
       .then((result) => {
         console.log(result);
-        toast.success("Login successful!");
+        Swal.fire({
+          icon: "success",
+          title: "Login Successful!",
+          timer: 1500,
+          showConfirmButton: false,
+        });
         navigate("/");
       })
       .catch((error) => {
         console.log(error);
-        toast.error("Login failed!");
+        Swal.fire({
+          icon: "error",
+          title: "Login Failed!",
+          text: error.message,
+        });
       });
   };
 
@@ -44,12 +54,21 @@ const Login = () => {
     signInWithGoogle()
       .then((result) => {
         console.log(result);
-        toast.success("Login successful!");
+        Swal.fire({
+          icon: "success",
+          title: "Login Successful!",
+          timer: 1500,
+          showConfirmButton: false,
+        });
         navigate("/");
       })
       .catch((error) => {
         console.log(error);
-        toast.error("Google login failed!");
+        Swal.fire({
+          icon: "error",
+          title: "Registration Failed!",
+          text: error.message,
+        });
       });
   };
 

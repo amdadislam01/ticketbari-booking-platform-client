@@ -115,11 +115,11 @@ const MyAddedTicket = () => {
 
     try {
       const res = await axiosSecure.patch(
-        `/added-ticket/${selectedTicket._id}`,
+        `/added-ticket/update/${selectedTicket._id}`,
         updatedTicket
       );
 
-      if (res.data.result.modifiedCount > 0) {
+      if (res.data.modifiedCount > 0) {
         Swal.fire({
           icon: "success",
           title: "Updated Successfully!",
@@ -181,7 +181,7 @@ const MyAddedTicket = () => {
                     : "bg-red-500 text-white"
                 }`}
               >
-                {ticket.status === "approved" &&  "✔ Approved"}
+                {ticket.status === "approved" && "✔ Approved"}
                 {ticket.status === "pending" && "⏳ Pending"}
                 {ticket.status === "rejected" && "❌ Rejected"}
               </span>

@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router'
 import UseAuth from './UseAuth'
 
 const axiosSecure = axios.create({
-    baseURL: 'http://localhost:3000'
+    baseURL: 'https://ticketbari-booking-platform-client.vercel.app'
 })
 
 const useAxiosSecure = () => {

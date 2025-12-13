@@ -2,12 +2,25 @@ import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { useTheme } from "../../../context/ThemeContext/ThemeContext";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from "recharts";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+  Legend,
+} from "recharts";
 import Loading from "../../../components/Loading/Loading";
+import UseAuth from "../../../hooks/UseAuth";
 
 const RevenueOverview = () => {
   const axiosSecure = useAxiosSecure();
   const { isDarkMode } = useTheme();
+  const { user } = UseAuth();
 
   // Fetch Payments
   const { data: payments = [], isLoading: loadingPay } = useQuery({
@@ -29,11 +42,12 @@ const RevenueOverview = () => {
 
   // Fetch Added Tickets
   const { data: tickets = [], isLoading: loadingTickets } = useQuery({
-    queryKey: ["ticketsAdded"],
+    queryKey: ["ticketsAdded", user?.email],
     queryFn: async () => {
-      const res = await axiosSecure.get("/added-ticket/pending");
+      const res = await axiosSecure.get(`/added-ticket?email=${user?.email}`);
       return res.data;
     },
+    enabled: !!user?.email,
   });
 
   const totalRevenue = payments.reduce((sum, pay) => sum + pay.amount, 0);
@@ -57,7 +71,7 @@ const RevenueOverview = () => {
     { name: "Available", value: totalAdded },
   ];
 
-  const COLORS = ["#FBBF24", "#F59E0B"]; 
+  const COLORS = ["#FBBF24", "#F59E0B"];
 
   return (
     <div
@@ -68,10 +82,14 @@ const RevenueOverview = () => {
       }`}
     >
       <div className="text-center mb-10">
-        <h2 className={`text-4xl font-extrabold bg-linear-to-r from-amber-500 to-orange-600 bg-clip-text text-transparent`}>
+        <h2
+          className={`text-4xl font-extrabold bg-linear-to-r from-amber-500 to-orange-600 bg-clip-text text-transparent`}
+        >
           Revenue Overview
         </h2>
-        <p className={`mt-2 ${isDarkMode ? "text-amber-200" : "text-amber-700"}`}>
+        <p
+          className={`mt-2 ${isDarkMode ? "text-amber-200" : "text-amber-700"}`}
+        >
           Real-time business insights at a glance
         </p>
       </div>
@@ -79,9 +97,21 @@ const RevenueOverview = () => {
       {/* Stats Cards  */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
         {[
-          { label: "Total Revenue", value: `$${totalRevenue.toLocaleString()}`, icon: "💰" },
-          { label: "Tickets Sold", value: totalSold.toLocaleString(), icon: "🎫" },
-          { label: "Tickets Added", value: totalAdded.toLocaleString(), icon: "➕" },
+          {
+            label: "Total Revenue",
+            value: `$${totalRevenue.toLocaleString()}`,
+            icon: "💰",
+          },
+          {
+            label: "Tickets Sold",
+            value: totalSold.toLocaleString(),
+            icon: "🎫",
+          },
+          {
+            label: "Tickets Added",
+            value: totalAdded.toLocaleString(),
+            icon: "➕",
+          },
         ].map((item, idx) => (
           <div
             key={idx}
@@ -92,10 +122,16 @@ const RevenueOverview = () => {
             }`}
           >
             <div className="text-5xl mb-4">{item.icon}</div>
-            <p className={`text-sm font-medium ${isDarkMode ? "text-amber-300" : "text-amber-600"}`}>
+            <p
+              className={`text-sm font-medium ${
+                isDarkMode ? "text-amber-300" : "text-amber-600"
+              }`}
+            >
               {item.label}
             </p>
-            <h3 className={`text-4xl font-bold mt-3 bg-linear-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent`}>
+            <h3
+              className={`text-4xl font-bold mt-3 bg-linear-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent`}
+            >
               {item.value}
             </h3>
             <div className="absolute inset-0 bg-linear-to-t from-amber-600/10 to-transparent pointer-events-none"></div>
@@ -106,13 +142,26 @@ const RevenueOverview = () => {
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
         {/* Bar Chart */}
-        <div className={`p-6 rounded-2xl ${isDarkMode ? "bg-black/40" : "bg-white/60"} backdrop-blur-lg border ${isDarkMode ? "border-amber-800/40" : "border-amber-200"}`}>
-          <h3 className={`text-xl font-bold text-center mb-6 ${isDarkMode ? "text-amber-400" : "text-amber-700"}`}>
+        <div
+          className={`p-6 rounded-2xl ${
+            isDarkMode ? "bg-black/40" : "bg-white/60"
+          } backdrop-blur-lg border ${
+            isDarkMode ? "border-amber-800/40" : "border-amber-200"
+          }`}
+        >
+          <h3
+            className={`text-xl font-bold text-center mb-6 ${
+              isDarkMode ? "text-amber-400" : "text-amber-700"
+            }`}
+          >
             Performance Summary
           </h3>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={barData} barSize={60}>
-              <XAxis dataKey="name" stroke={isDarkMode ? "#FDE68A" : "#92400E"} />
+              <XAxis
+                dataKey="name"
+                stroke={isDarkMode ? "#FDE68A" : "#92400E"}
+              />
               <YAxis stroke={isDarkMode ? "#FDE68A" : "#92400E"} />
               <Tooltip
                 contentStyle={{
@@ -132,8 +181,18 @@ const RevenueOverview = () => {
         </div>
 
         {/* Pie Chart */}
-        <div className={`p-6 rounded-2xl ${isDarkMode ? "bg-black/40" : "bg-white/60"} backdrop-blur-lg border ${isDarkMode ? "border-amber-800/40" : "border-amber-200"}`}>
-          <h3 className={`text-xl font-bold text-center mb-6 ${isDarkMode ? "text-amber-400" : "text-amber-700"}`}>
+        <div
+          className={`p-6 rounded-2xl ${
+            isDarkMode ? "bg-black/40" : "bg-white/60"
+          } backdrop-blur-lg border ${
+            isDarkMode ? "border-amber-800/40" : "border-amber-200"
+          }`}
+        >
+          <h3
+            className={`text-xl font-bold text-center mb-6 ${
+              isDarkMode ? "text-amber-400" : "text-amber-700"
+            }`}
+          >
             Ticket Distribution
           </h3>
           <ResponsiveContainer width="100%" height={300}>
@@ -147,10 +206,17 @@ const RevenueOverview = () => {
                 paddingAngle={5}
                 dataKey="value"
                 label={({ name, value }) => `${name}: ${value}`}
-                labelStyle={{ fontSize: "14px", fontWeight: "bold", fill: isDarkMode ? "#FFF" : "#451A03" }}
+                labelStyle={{
+                  fontSize: "14px",
+                  fontWeight: "bold",
+                  fill: isDarkMode ? "#FFF" : "#451A03",
+                }}
               >
                 {pieData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={COLORS[index % COLORS.length]}
+                  />
                 ))}
               </Pie>
               <Tooltip

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
 import { useTheme } from "../../../context/ThemeContext/ThemeContext";
+import Swal from "sweetalert2";
 
 const ManageUsers = () => {
   const axiosSecure = useAxiosSecure();
@@ -17,11 +18,39 @@ const ManageUsers = () => {
   });
 
   const updateRole = async (id, role) => {
+    const roleText =
+      role === "admin" ? "Admin" : role === "vendor" ? "Vendor" : "Fraud";
+
+    const confirm = await Swal.fire({
+      title: "Are you sure?",
+      text: `You want to make this ${role} ${roleText}?`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#2563eb",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, confirm",
+    });
+
+    if (!confirm.isConfirmed) return;
+
     try {
       setLoadingId(id);
       await axiosSecure.patch(`/users/${id}/role`, { role });
       await refetch();
+
+      Swal.fire({
+        icon: "success",
+        title: "Success!",
+        text: `${role} has been successfully made ${roleText}.`,
+        timer: 2000,
+        showConfirmButton: false,
+      });
     } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops!",
+        text: "Something went wrong. Please try again.",
+      });
       console.error("Role update error:", error);
     } finally {
       setLoadingId(null);
@@ -36,7 +65,7 @@ const ManageUsers = () => {
     >
       <h1 className="text-3xl font-bold mb-6">Manage Users</h1>
 
-      {/* =================== DESKTOP/TABLET TABLE (unchanged) =================== */}
+      {/*  TABLET TABLE   */}
       <div
         className={`hidden md:block overflow-x-auto rounded-xl shadow-lg p-4 ${
           isDarkMode ? "bg-[#1e293b]" : "bg-white"
@@ -129,7 +158,7 @@ const ManageUsers = () => {
         </table>
       </div>
 
-      {/* =================== MOBILE CARD VIEW =================== */}
+      {/*  MOBILE  VIEW  */}
       <div className="md:hidden space-y-4">
         {users.map((user, index) => (
           <div

@@ -31,7 +31,7 @@ const Footer = () => {
       initial="hidden"
       animate="show"
       transition={{ staggerChildren: 0.2 }}
-      className={`w-full pt-16 pb-8 transition-colors duration-500 ${
+      className={`w-full  pb-8 transition-colors duration-500 ${
         isDarkMode ? "bg-gray-900 text-gray-300" : "bg-gray-50 text-gray-800"
       }`}
     >

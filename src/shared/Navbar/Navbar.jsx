@@ -62,9 +62,27 @@ const Navbar = () => {
           {/* Theme Toggle */}
           <button
             onClick={toggleTheme}
-            className="p-2 rounded-full border border-orange-500 cursor-pointer"
+            className={`relative w-16 h-8 rounded-full flex items-center px-1 transition-all duration-500
+    ${
+      isDarkMode
+        ? "bg-linear-to-r from-gray-800 to-gray-900"
+        : "bg-linear-to-r from-yellow-300 to-orange-400"
+    }
+    shadow-inner`}
           >
-            {isDarkMode ? <FiSun /> : <FiMoon />}
+            {/* Toggle Knob */}
+            <span
+              className={`absolute w-6 h-6 rounded-full bg-white flex items-center justify-center
+      transform transition-all duration-500
+      ${isDarkMode ? "translate-x-8" : "translate-x-0"}
+      shadow-lg`}
+            >
+              {isDarkMode ? (
+                <FiMoon className="text-gray-800 text-sm" />
+              ) : (
+                <FiSun className="text-yellow-500 text-sm" />
+              )}
+            </span>
           </button>
 
           {/* User Profile */}
@@ -173,9 +191,29 @@ const Navbar = () => {
           {/* Theme Toggle */}
           <button
             onClick={toggleTheme}
-            className="px-4 py-2 rounded-lg border border-orange-500 w-full"
+            className={`relative w-14 h-8 sm:w-16 sm:h-9 rounded-full flex items-center px-1
+    transition-all duration-500 ease-in-out
+    ${
+      isDarkMode
+        ? "bg-linear-to-r from-gray-800 to-gray-900"
+        : "bg-linear-to-r from-yellow-300 to-orange-400"
+    }
+    shadow-inner active:scale-95`}
           >
-            {isDarkMode ? "Light Mode" : "Dark Mode"}
+            {/* Toggle Knob */}
+            <span
+              className={`absolute w-6 h-6 sm:w-7 sm:h-7 rounded-full
+      bg-white flex items-center justify-center
+      transform transition-all duration-500 ease-in-out
+      ${isDarkMode ? "translate-x-6 sm:translate-x-7" : "translate-x-0"}
+      shadow-lg`}
+            >
+              {isDarkMode ? (
+                <FiMoon className="text-gray-800 text-sm sm:text-base" />
+              ) : (
+                <FiSun className="text-yellow-500 text-sm sm:text-base" />
+              )}
+            </span>
           </button>
 
           {/* Mobile Auth */}

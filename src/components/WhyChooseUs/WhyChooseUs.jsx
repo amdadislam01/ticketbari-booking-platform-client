@@ -9,7 +9,7 @@ const fadeUp = {
 const WhyChooseUs = () => {
   const { isDarkMode } = useTheme();
   return (
-    <section className={`py-24 ${isDarkMode ? "bg-gray-900" : "bg-gray-50"}`}>
+    <section className={`py-24 ${isDarkMode ? "bg-gray-900" : "bg-white"}`}>
       <div className="max-w-7xl mx-auto px-6">
         <motion.h2
           initial="hidden"

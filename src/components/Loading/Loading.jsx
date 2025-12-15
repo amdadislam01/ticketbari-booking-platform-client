@@ -1,134 +1,98 @@
 import { motion } from "framer-motion";
+import { Car } from "lucide-react";
 import { useTheme } from "../../context/ThemeContext/ThemeContext";
 
 const Loading = () => {
   const { isDarkMode } = useTheme();
 
   return (
-    <div
-      className={`fixed inset-0 flex items-center justify-center z-50
-        overflow-hidden p-6 pointer-events-none ${isDarkMode ? "bg-black" : "bg-transparent"}`}
-    >
-
-      <motion.div
-        className="absolute w-[800px] h-[800px] rounded-full blur-3xl opacity-20"
-        animate={{
-          x: [0, 120, -120, 0],
-          y: [0, -80, 80, 0],
-          rotate: [0, 360],
-        }}
-        transition={{ repeat: Infinity, duration: 22, ease: "easeInOut" }}
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
+      
+      {/* Background */}
+      <div
+        className={`absolute inset-0 ${
+          isDarkMode
+            ? "bg-black"
+            : "bg-transparent"
+        }`}
         style={{
-          background: isDarkMode
-            ? "conic-gradient(from 0deg, #ff6a00, #ff008c, #6900ff, #00eaff)"
-            : "conic-gradient(from 0deg, #ff7b00, #ff3f9e, #7a00ff, #00c3ff)"
+          backgroundImage: !isDarkMode
+            ? "linear-gradient(180deg, rgba(0,0,0,0.12), rgba(0,0,0,0.03), transparent)"
+            : "none",
         }}
       />
 
-      <motion.div
-        className="absolute w-[400px] h-[400px] rounded-full blur-2xl opacity-30"
-        animate={{
-          x: [0, -100, 100, 0],
-          y: [0, 60, -60, 0],
-          rotate: [0, -360],
-        }}
-        transition={{ repeat: Infinity, duration: 20, ease: "easeInOut" }}
-        style={{
-          background: isDarkMode
-            ? "radial-gradient(circle, #ff008c, #6900ff, transparent)"
-            : "radial-gradient(circle, #ff3f9e, #7a00ff, transparent)"
-        }}
-      />
+      {/* Loader */}
+      <div className="relative flex flex-col items-center gap-8 pointer-events-none">
 
-      {/* Glass Card */}
-      <motion.div
-        initial={{ opacity: 0, y: 50, scale: 0.85 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-        className={`
-          backdrop-blur-3xl rounded-4xl p-14 flex flex-col items-center relative z-10
-          shadow-2xl border pointer-events-auto
-          ${isDarkMode 
-            ? "bg-white/5 border-white/10 shadow-[0_0_60px_rgba(255,255,255,0.05)]"
-            : "bg-white/50 border-gray-300 shadow-[0_0_60px_rgba(0,0,0,0.12)]"
-          }
-        `}
-      >
-        {/* Neon Rings */}
+        {/* Speed Lines */}
+        <div className="absolute -top-10 flex gap-2">
+          {[...Array(5)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="h-1 w-8 rounded-full bg-orange-400/60"
+              animate={{ x: [0, -80], opacity: [1, 0] }}
+              transition={{
+                repeat: Infinity,
+                duration: 0.6,
+                delay: i * 0.1,
+                ease: "linear",
+              }}
+            />
+          ))}
+        </div>
+
+        {/* Car */}
         <motion.div
-          className="relative flex items-center justify-center"
-          animate={{ rotate: 360 }}
-          transition={{ repeat: Infinity, duration: 3, ease: "linear" }}
+          animate={{ x: [-20, 20, -20], y: [0, -4, 0] }}
+          transition={{ repeat: Infinity, duration: 1, ease: "easeInOut" }}
+          className="relative"
         >
-          <motion.div
-            className="absolute w-44 h-44 rounded-full"
-            style={{
-              border: isDarkMode
-                ? "5px solid rgba(255,255,255,0.15)"
-                : "5px solid rgba(0,0,0,0.15)"
-            }}
-            animate={{ rotate: -360 }}
-            transition={{ repeat: Infinity, duration: 7, ease: "linear" }}
+          <Car
+            size={64}
+            className={`drop-shadow-xl ${
+              isDarkMode ? "text-orange-400" : "text-orange-600"
+            }`}
           />
 
+          {/* Head Light */}
           <motion.div
-            className="absolute w-32 h-32 rounded-full border-2 border-dashed"
-            style={{
-              borderColor: isDarkMode ? "rgba(255,255,255,0.25)" : "rgba(0,0,0,0.25)"
-            }}
-            animate={{ rotate: 360 }}
-            transition={{ repeat: Infinity, duration: 4, ease: "linear" }}
+            className="absolute right-[-22px] top-[20px] h-3 w-6 rounded-full bg-yellow-400 blur-sm"
+            animate={{ opacity: [0.3, 1, 0.3], scale: [1, 1.3, 1] }}
+            transition={{ repeat: Infinity, duration: 0.5 }}
           />
 
+          {/* Smoke */}
           <motion.div
-            className="absolute w-24 h-24 rounded-full"
-            style={{
-              background: isDarkMode
-                ? "conic-gradient(#ff6a00, #ff008c, #6900ff, #00eaff)"
-                : "conic-gradient(#ff7b00, #ff3f9e, #7a00ff, #00c3ff)"
-            }}
-            animate={{ rotate: -360 }}
-            transition={{ repeat: Infinity, duration: 5, ease: "linear" }}
-          />
-
-          <motion.div
-            className={`
-              w-14 h-14 rounded-full shadow-xl
-              ${isDarkMode
-                ? "bg-white/50 shadow-[0_0_30px_rgba(255,255,255,0.7)]"
-                : "bg-gray-600/40 shadow-[0_0_25px_rgba(0,0,0,0.4)]"
-              }
-            `}
-            animate={{
-              scale: [1, 1.6, 1],
-              opacity: [0.8, 0.3, 0.8]
-            }}
-            transition={{
-              repeat: Infinity,
-              duration: 1.8,
-              ease: "easeInOut"
-            }}
+            className="absolute left-[-20px] top-[28px] h-3 w-3 rounded-full bg-gray-400/40 blur-sm"
+            animate={{ x: [-10, -30], opacity: [0.6, 0] }}
+            transition={{ repeat: Infinity, duration: 0.8, ease: "easeOut" }}
           />
         </motion.div>
 
-        {/* Loading Text */}
+        {/* Road */}
+        <div className="relative w-72 h-2 overflow-hidden rounded-full bg-black/20">
+          <motion.div
+            className="absolute top-0 left-0 h-full w-20 rounded-full
+            bg-gradient-to-r from-orange-500 to-yellow-400"
+            animate={{ x: ["-30%", "400%"] }}
+            transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+          />
+        </div>
+
+        {/* Text */}
         <motion.p
-          className={`
-            mt-10 text-2xl tracking-widest font-bold
-            ${isDarkMode 
-              ? "text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.8)]"
-              : "text-gray-900 drop-shadow-[0_0_10px_rgba(0,0,0,0.5)]"
-            }
-          `}
           animate={{
-            y: [0, -8, 0],
-            opacity: [0.5, 1, 0.5]
+            opacity: [0.3, 1, 0.3],
+            letterSpacing: ["2px", "6px", "2px"],
           }}
-          transition={{ repeat: Infinity, duration: 2.2, ease: "easeInOut" }}
+          transition={{ repeat: Infinity, duration: 1.6 }}
+          className={`text-sm font-semibold tracking-widest
+          ${isDarkMode ? "text-gray-400" : "text-gray-700"}`}
         >
-          Loading...
+          TRAVELING...
         </motion.p>
-      </motion.div>
+      </div>
     </div>
   );
 };

@@ -39,7 +39,8 @@ const Countdown = ({ date }) => {
     return () => clearInterval(interval);
   }, [date]);
 
-  if (countdown === "Expired") return <span className="text-red-500 font-bold">Expired</span>;
+  if (countdown === "Expired")
+    return <span className="text-red-500 font-bold">Expired</span>;
 
   return (
     <span className="px-4 py-2 rounded-xl bg-linear-to-r from-orange-500 to-red-600 text-white font-bold text-sm shadow-lg">
@@ -62,28 +63,26 @@ const MyAddedBooking = () => {
     enabled: !!user?.email,
   });
 
+  const handlePayment = async (booking) => {
+    try {
+      const paymentInfo = {
+        totalPrice: booking.totalPrice,
+        ticketId: booking._id,
+        title: booking.title,
+        senderEmail: booking.userEmail,
+      };
 
-const handlePayment = async (booking) => {
-  try {
-    const paymentInfo = {
-      totalPrice: booking.totalPrice,
-      ticketId: booking._id,
-      title: booking.title,
-      senderEmail: booking.userEmail,
-    };
+      console.log("PAYMENT INFO SENT:", paymentInfo);
 
-    console.log("PAYMENT INFO SENT:", paymentInfo);
-
-    const res = await axiosSecure.post("/checkout-payment", paymentInfo);
-    window.location.href = res.data.url;
-  } catch (error) {
-    console.error("Payment failed:", error);
-    alert("Payment failed: " + error?.response?.data?.message || error.message);
-  }
-};
-
-
-
+      const res = await axiosSecure.post("/checkout-payment", paymentInfo);
+      window.location.href = res.data.url;
+    } catch (error) {
+      console.error("Payment failed:", error);
+      alert(
+        "Payment failed: " + error?.response?.data?.message || error.message
+      );
+    }
+  };
 
   if (isLoading) return <Loading />;
 
@@ -160,7 +159,9 @@ const handlePayment = async (booking) => {
 
                   {/* Content */}
                   <div className="p-6 space-y-5">
-                    <h3 className="text-xl font-bold line-clamp-2">{booking.title}</h3>
+                    <h3 className="text-xl font-bold line-clamp-2">
+                      {booking.title}
+                    </h3>
 
                     {/* Route */}
                     <div className="flex items-center gap-3 text-lg">
@@ -174,7 +175,10 @@ const handlePayment = async (booking) => {
                     <div className="flex items-center gap-3 text-sm opacity-90">
                       <FaCalendarAlt className="text-purple-500" />
                       <span>
-                        {new Date(booking.ticketDate).toLocaleDateString("en-GB")} • {booking.time}
+                        {new Date(booking.ticketDate).toLocaleDateString(
+                          "en-GB"
+                        )}{" "}
+                        • {booking.time}
                       </span>
                     </div>
 
@@ -182,7 +186,10 @@ const handlePayment = async (booking) => {
                     <div className="flex justify-between items-center pt-3 border-t border-gray-600/30 dark:border-gray-300/20">
                       <div className="flex items-center gap-2">
                         <FaTicketAlt className="text-yellow-500" />
-                        <span className="font-medium">{booking.quantity} Ticket{booking.quantity > 1 ? "s" : ""}</span>
+                        <span className="font-medium">
+                          {booking.quantity} Ticket
+                          {booking.quantity > 1 ? "s" : ""}
+                        </span>
                       </div>
                       <div className="text-2xl font-bold text-orange-500">
                         {booking.totalPrice} Tk
@@ -190,34 +197,46 @@ const handlePayment = async (booking) => {
                     </div>
 
                     {/* Countdown or Status Message */}
-                    {status !== "rejected" && !isExpired && status !== "paid" && (
-                      <div className="flex items-center justify-center gap-3 py-3 bg-orange-500/10 dark:bg-orange-900/30 rounded-xl border border-orange-500/30">
-                        <FaHourglassHalf className="text-orange-500 animate-pulse" /> Time Left:
-                        <Countdown date={booking.ticketDate} />
-                      </div>
-                    )}
+                    {status !== "rejected" &&
+                      !isExpired &&
+                      status !== "paid" && (
+                        <div className="flex items-center justify-center gap-3 py-3 bg-orange-500/10 dark:bg-orange-900/30 rounded-xl border border-orange-500/30">
+                          <FaHourglassHalf className="text-orange-500 animate-pulse" />{" "}
+                          Time Left:
+                          <Countdown date={booking.ticketDate} />
+                        </div>
+                      )}
 
                     {/* Action Button / Status */}
                     <div className="pt-4">
                       {status === "pending" && (
-                        <button disabled className="w-full py-4 rounded-xl font-bold text-yellow-600 bg-yellow-500/20 border border-yellow-500/40 cursor-not-allowed">
+                        <button
+                          disabled
+                          className="w-full py-4 rounded-xl font-bold text-yellow-600 bg-yellow-500/20 border border-yellow-500/40 cursor-not-allowed"
+                        >
                           Awaiting Approval
                         </button>
                       )}
 
                       {status === "approved" && !isExpired && (
-                        <button onClick={() => handlePayment(booking)} className="w-full py-4 rounded-xl font-bold text-white bg-linear-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg transform transition active:scale-95">
+                        <button
+                          onClick={() => handlePayment(booking)}
+                          className="w-full py-4 rounded-xl font-bold text-white bg-linear-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg transform transition active:scale-95"
+                        >
                           Pay Now
                         </button>
                       )}
 
                       {status === "paid" && (
-                        <button disabled className="w-full py-4 rounded-xl font-bold text-white bg-linear-to-r from-green-500 to-emerald-600 opacity-90 cursor-not-allowed shadow-lg">
+                        <button
+                          disabled
+                          className="w-full py-4 rounded-xl font-bold text-white bg-linear-to-r from-green-500 to-emerald-600 opacity-90 cursor-not-allowed shadow-lg"
+                        >
                           Payment Completed
                         </button>
                       )}
 
-                      {(isExpired && status !== "paid") && (
+                      {isExpired && status !== "paid" && (
                         <div className="text-center py-4 rounded-xl bg-red-500/20 border border-red-500/40 text-red-500 font-bold">
                           Trip Expired
                         </div>

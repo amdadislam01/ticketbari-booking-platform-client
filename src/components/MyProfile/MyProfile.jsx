@@ -186,16 +186,16 @@ const MyProfile = () => {
                 {/* Social Icons */}
                 <div className="flex gap-4 mt-8">
                   {socialIcons.map(
-                    ({ Icon, color, link }) =>
+                    ({ Icon, color, link }, index) =>
                       link && (
                         <a
-                          key={link}
+                          key={index}
                           href={
                             link.startsWith("http") ? link : `https://${link}`
                           }
                           target="_blank"
                           rel="noopener noreferrer"
-                          className={`w-12 h-12 ${color} text-white rounded-xl flex items-center justify-center shadow-lg hover:scale-110 transition-transform`}
+                          className={`w-12 h-12 ${color} text-white rounded-xl flex items-center justify-center`}
                         >
                           <Icon className="text-xl" />
                         </a>

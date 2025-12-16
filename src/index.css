@@ -5,10 +5,13 @@
   themes: light --default, dark --prefersdark;
 }
 
+
 * {
   font-family: "Lato", sans-serif;
   scrollbar-width: none;
 }
+
+
 
 /* banner Animation */
 @keyframes slideZoom {

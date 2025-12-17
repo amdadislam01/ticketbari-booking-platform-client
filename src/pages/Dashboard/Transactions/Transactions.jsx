@@ -155,7 +155,7 @@ const Transactions = () => {
                     (head) => (
                       <th
                         key={head}
-                        className="px-6 py-4 text-left text-xs font-bold text-orange-700 dark:text-orange-300 uppercase tracking-wider"
+                        className={`px-6 py-4 text-left text-xs font-bold uppercase tracking-wider ${isDarkMode ? "text-orange-300" : "text-orange-600"}`}
                       >
                         {head}
                       </th>
@@ -179,7 +179,7 @@ const Transactions = () => {
                   payments.map((payment, index) => (
                     <tr
                       key={payment._id}
-                      className="hover:bg-orange-50 dark:hover:bg-gray-700/50 transition-colors"
+                      className={`transition-colors ${isDarkMode ? "hover:bg-gray-700/50" : "hover:bg-orange-50"}`}
                     >
                       <td className="px-6 py-5 text-sm font-medium text-gray-700 dark:text-gray-300">
                         {index + 1}

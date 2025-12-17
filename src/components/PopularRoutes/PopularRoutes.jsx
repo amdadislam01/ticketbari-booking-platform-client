@@ -54,7 +54,7 @@ const PopularRoutes = () => {
               key={index}
               className="group relative rounded-3xl p-[1.5px] transition-all duration-300 hover:scale-105"
             >
-              <div className="absolute inset-0 rounded-3xl bg-linear-to-r from-orange-500 to-pink-600 opacity-70 blur-sm group-hover:opacity-100" />
+              <div className="absolute inset-0 rounded-3xl bg-linear-to-r from-orange-500 to-pink-600 opacity-70" />
 
               <div
                 className={`relative rounded-3xl p-6 h-full backdrop-blur-xl ${

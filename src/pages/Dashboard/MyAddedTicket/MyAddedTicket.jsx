@@ -102,8 +102,8 @@ const MyAddedTicket = () => {
       from: form.from.value,
       to: form.to.value,
       transport: form.transport.value,
-      price: form.price.value,
-      quantity: form.quantity.value,
+      price: parseInt(form.price.value),
+      quantity: parseInt(form.quantity.value),
       date: ticketAddedDate.toISOString(),
       time: ticketTime.toLocaleTimeString([], {
         hour: "2-digit",

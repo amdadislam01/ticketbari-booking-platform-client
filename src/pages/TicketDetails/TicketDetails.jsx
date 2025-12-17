@@ -104,6 +104,7 @@ const TicketDetails = () => {
         timer: 2000,
         showConfirmButton: false,
       });
+  
 
       setOpenModal(false);
       setQuantity(1);
@@ -296,7 +297,7 @@ const TicketDetails = () => {
                   />
                 </div>
 
-                <div className="text-center py-6 bg-gray-100 dark:bg-gray-700 rounded-lg">
+                <div className={`text-center py-6  rounded-lg ${isDarkMode ? "bg-gray-700": "bg-gray-100"} `}>
                   <p className="text-lg font-medium">Total Amount</p>
                   <p className="text-3xl font-bold text-orange-500 mt-2">
                     {ticket.price * quantity} Tk
@@ -319,7 +320,7 @@ const TicketDetails = () => {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={handleBooking}
-                  className="flex-1 py-3 rounded-lg font-medium text-white bg-gradient-to-r from-orange-500 to-pink-600 hover:from-orange-600 hover:to-pink-700 shadow-md"
+                  className="flex-1 py-3 rounded-lg font-medium text-white bg-linear-to-r from-orange-500 to-pink-600 hover:from-orange-600 hover:to-pink-700 shadow-md"
                 >
                   Confirm Booking
                 </motion.button>

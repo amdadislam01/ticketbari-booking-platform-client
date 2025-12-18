@@ -55,7 +55,7 @@ const ManageTickets = () => {
   return (
     <div
       className={`p-6 min-h-screen ${
-        isDarkMode ? "bg-[#0f172a] text-white" : "bg-gray-50 text-gray-800"
+        isDarkMode ? "bg-[#0f172a] text-white" : "text-gray-800"
       }`}
     >
       <h1 className="text-3xl font-bold mb-6">Manage Tickets</h1>

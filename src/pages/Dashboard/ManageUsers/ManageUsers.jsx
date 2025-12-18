@@ -60,7 +60,7 @@ const ManageUsers = () => {
   return (
     <div
       className={`p-6 min-h-screen transition ${
-        isDarkMode ? "bg-[#0f172a] text-white" : "bg-gray-50 text-gray-800"
+        isDarkMode ? "bg-[#0f172a] text-white" : "text-gray-800"
       }`}
     >
       <h1 className="text-3xl font-bold mb-6">Manage Users</h1>
@@ -98,7 +98,7 @@ const ManageUsers = () => {
               >
                 <td className="py-3 px-4">{index + 1}</td>
                 <td className="py-3 px-4 font-medium">
-                  {user.displayName || "No Name"}
+                  {user.displayName}
                 </td>
                 <td className="py-3 px-4">{user.email}</td>
                 <td className="py-3 px-4 capitalize">

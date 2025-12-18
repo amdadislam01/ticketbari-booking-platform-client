@@ -11,6 +11,9 @@ import {
 } from "react-icons/fa";
 import Loading from "../../../components/Loading/Loading";
 import { motion } from "framer-motion";
+import Swal from "sweetalert2";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 //  Countdown Time
 const Countdown = ({ date }) => {
@@ -54,7 +57,11 @@ const MyAddedBooking = () => {
   const { isDarkMode } = useTheme();
   const { user } = UseAuth();
 
-  const { data: bookings = [], isLoading } = useQuery({
+  const {
+    data: bookings = [],
+    isLoading,
+    refetch,
+  } = useQuery({
     queryKey: ["my-bookings", user?.email],
     queryFn: async () => {
       const res = await axiosSecure.get(`/booking?email=${user?.email}`);
@@ -62,7 +69,7 @@ const MyAddedBooking = () => {
     },
     enabled: !!user?.email,
   });
-
+  // handel booking payment
   const handlePayment = async (booking) => {
     try {
       const paymentInfo = {
@@ -82,6 +89,118 @@ const MyAddedBooking = () => {
         "Payment failed: " + error?.response?.data?.message || error.message
       );
     }
+  };
+  // handle cancel booking
+  const handleCancelBooking = async (bookingId) => {
+    const result = await Swal.fire({
+      title: "Cancel Booking?",
+      text: "This action cannot be undone.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#ef4444",
+      cancelButtonColor: "#6b7280",
+      confirmButtonText: "Yes, cancel it",
+      cancelButtonText: "No, keep it",
+    });
+
+    if (!result.isConfirmed) return;
+
+    try {
+      const res = await axiosSecure.delete(`/booking/${bookingId}`);
+
+      if (res.data.success) {
+        await Swal.fire({
+          icon: "success",
+          title: "Cancelled!",
+          text: "Your booking has been cancelled successfully.",
+          timer: 2000,
+          showConfirmButton: false,
+        });
+        refetch();
+      }
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Cancel Failed",
+        text:
+          error?.response?.data?.message ||
+          "Something went wrong. Please try again.",
+      });
+    }
+  };
+  // handel download ticket
+  const handleDownloadTicket = (booking) => {
+    const doc = new jsPDF();
+
+    doc.setFillColor(255, 122, 24);
+    doc.rect(0, 0, 210, 40, "F");
+
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(22);
+    doc.setFont("helvetica", "bold");
+    doc.text("TRAVEL TICKET", 105, 25, { align: "center" });
+
+    doc.setFontSize(10);
+    doc.text(`Ticket ID: ${booking._id}`, 105, 33, { align: "center" });
+
+    doc.setTextColor(0, 0, 0);
+
+    doc.setFontSize(16);
+    doc.setFont("helvetica", "bold");
+    doc.text(`${booking.from}  →  ${booking.to}`, 105, 55, { align: "center" });
+
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "normal");
+    doc.text(
+      `${new Date(booking.ticketDate).toLocaleDateString("en-GB")} | ${
+        booking.time
+      }`,
+      105,
+      63,
+      { align: "center" }
+    );
+
+    doc.setDrawColor(200);
+    doc.line(20, 70, 190, 70);
+
+    autoTable(doc, {
+      startY: 78,
+      theme: "grid",
+      styles: {
+        fontSize: 12,
+        cellPadding: 6,
+      },
+      headStyles: {
+        fillColor: [255, 122, 24],
+        textColor: 255,
+      },
+      head: [["Field", "Details"]],
+      body: [
+        ["Title", booking.title],
+        ["Quantity", `${booking.quantity} Ticket(s)`],
+        ["Total Price", `${booking.totalPrice} Tk`],
+        ["Status", booking.status.toUpperCase()],
+      ],
+    });
+
+    const finalY = doc.lastAutoTable.finalY + 15;
+
+    doc.setFillColor(245, 245, 245);
+    doc.roundedRect(20, finalY, 170, 25, 5, 5, "F");
+
+    doc.setFontSize(12);
+    doc.setTextColor(60);
+    doc.text(
+      [
+        "Thank you for choosing our service.",
+        "We look forward to serving you again.",
+      ],
+      105,
+      finalY + 10,
+      { align: "center", lineHeightFactor: 1.6 }
+    );
+
+    doc.save(`Ticket-${booking.title}.pdf`);
   };
 
   if (isLoading) return <Loading />;
@@ -210,12 +329,24 @@ const MyAddedBooking = () => {
                     {/* Action Button / Status */}
                     <div className="pt-4">
                       {status === "pending" && (
-                        <button
-                          disabled
-                          className="w-full py-4 rounded-xl font-bold text-yellow-600 bg-yellow-500/20 border border-yellow-500/40 cursor-not-allowed"
-                        >
-                          Awaiting Approval
-                        </button>
+                        <div className="flex gap-3">
+                          <button
+                            disabled
+                            className="flex-1 py-4 rounded-xl font-bold text-yellow-600 bg-yellow-500/20 border border-yellow-500/40 cursor-not-allowed"
+                          >
+                            Awaiting Approval
+                          </button>
+
+                          <button
+                            onClick={() => handleCancelBooking(booking._id)}
+                            className="flex-1 py-4 rounded-xl font-bold text-white
+        bg-linear-to-r from-red-500 to-rose-600
+        hover:from-red-600 hover:to-rose-700
+        shadow-lg transition active:scale-95"
+                          >
+                            Cancel
+                          </button>
+                        </div>
                       )}
 
                       {status === "approved" && !isExpired && (
@@ -228,12 +359,26 @@ const MyAddedBooking = () => {
                       )}
 
                       {status === "paid" && (
-                        <button
-                          disabled
-                          className="w-full py-4 rounded-xl font-bold text-white bg-linear-to-r from-green-500 to-emerald-600 opacity-90 cursor-not-allowed shadow-lg"
-                        >
-                          Payment Completed
-                        </button>
+                        <div className="flex flex-col gap-3">
+                          <button
+                            disabled
+                            className="w-full py-4 rounded-xl font-bold text-white
+      bg-linear-to-r from-green-500 to-emerald-600
+      opacity-90 cursor-not-allowed shadow-lg"
+                          >
+                            Payment Completed
+                          </button>
+
+                          <button
+                            onClick={() => handleDownloadTicket(booking)}
+                            className="w-full py-3 rounded-xl font-bold text-white
+      bg-linear-to-r from-orange-500 to-pink-600
+      hover:from-orange-600 hover:to-pink-700
+      shadow-lg transition active:scale-95"
+                          >
+                            Download Ticket
+                          </button>
+                        </div>
                       )}
 
                       {isExpired && status !== "paid" && (

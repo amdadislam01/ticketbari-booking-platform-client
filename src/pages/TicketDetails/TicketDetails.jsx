@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { useTheme } from "../../context/ThemeContext/ThemeContext";
@@ -18,7 +18,7 @@ const TicketDetails = () => {
   const axiosSecure = useAxiosSecure();
   const { isDarkMode } = useTheme();
   const { user } = UseAuth();
-
+  const navigate = useNavigate();
   const [openModal, setOpenModal] = useState(false);
   const [quantity, setQuantity] = useState(1);
   const [countdown, setCountdown] = useState("");
@@ -104,7 +104,7 @@ const TicketDetails = () => {
         timer: 2000,
         showConfirmButton: false,
       });
-  
+      navigate('/dashboard')
 
       setOpenModal(false);
       setQuantity(1);

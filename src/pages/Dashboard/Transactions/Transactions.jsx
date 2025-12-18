@@ -163,7 +163,7 @@ const Transactions = () => {
                   )}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-orange-100 dark:divide-gray-700">
+              <tbody className={`divide-y ${isDarkMode ? "divide-gray-700" : "divide-orange-100"}`}>
                 {payments.length === 0 ? (
                   <tr>
                     <td colSpan="5" className="text-center py-20">
@@ -181,23 +181,21 @@ const Transactions = () => {
                       key={payment._id}
                       className={`transition-colors ${isDarkMode ? "hover:bg-gray-700/50" : "hover:bg-orange-50"}`}
                     >
-                      <td className="px-6 py-5 text-sm font-medium text-gray-700 dark:text-gray-300">
+                      <td className={`px-6 py-5 text-sm font-medium ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}>
                         {index + 1}
                       </td>
                       <td className="px-6 py-5 font-mono text-sm text-orange-600 dark:text-orange-400 font-semibold">
                         {payment.transactionId}
                       </td>
                       <td
-                        className={`px-6 py-5 text-sm font-semibold ${
-                          isDarkMode ? "text-white" : "text-gray-800"
-                        }`}
+                        className={`px-6 py-5 text-sm font-semibold ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}
                       >
                         {payment.ticketName}
                       </td>
-                      <td className="px-6 py-5 text-lg font-bold text-amber-600 dark:text-amber-400">
+                      <td className={`px-6 py-5 text-lg font-bold ${isDarkMode ? "text-amber-400" : "text-amber-600"}`}>
                         {formatCurrency(payment.amount)}
                       </td>
-                      <td className="px-6 py-5 text-sm text-gray-600 dark:text-gray-400">
+                      <td className={`px-6 py-5 text-sm ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}>
                         {format(new Date(payment.paidAt), "dd MMM yyyy")}
                       </td>
                     </tr>
@@ -241,9 +239,7 @@ const Transactions = () => {
                   </div>
 
                   <h3
-                    className={`mobile-card-title text-sm font-bold mb-2 ${
-                      isDarkMode ? "text-white" : "text-gray-900"
-                    }`}
+                    className={`mobile-card-title text-sm font-bold mb-2 ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}
                   >
                     {payment.ticketName}
                   </h3>

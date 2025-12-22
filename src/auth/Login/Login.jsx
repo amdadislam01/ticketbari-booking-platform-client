@@ -14,8 +14,8 @@ import { useTheme } from "../../context/ThemeContext/ThemeContext";
 import { useForm } from "react-hook-form";
 import UseAuth from "../../hooks/UseAuth";
 import { useNavigate } from "react-router";
-import { toast } from "react-toastify";
 import Swal from "sweetalert2";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 const Login = () => {
   const {
@@ -23,6 +23,7 @@ const Login = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
+  const axiosSecure = useAxiosSecure();
   const { loginUser, signInWithGoogle } = UseAuth();
   const { isDarkMode } = useTheme();
   const [showPassword, setShowPassword] = useState(false);
@@ -51,26 +52,36 @@ const Login = () => {
   };
 
   const handleGoogleSignIn = () => {
-    signInWithGoogle()
-      .then((result) => {
-        console.log(result);
-        Swal.fire({
-          icon: "success",
-          title: "Login Successful!",
-          timer: 1500,
-          showConfirmButton: false,
+      signInWithGoogle()
+        .then((result) => {
+          const loggedUser = result.user;
+  
+          const userInfo = {
+            email: loggedUser.email,
+            displayName: loggedUser.displayName,
+            photoURL: loggedUser.photoURL,
+          };
+  
+          axiosSecure.post("/users", userInfo);
+  
+          Swal.fire({
+            icon: "success",
+            title: "Login Successful!",
+            timer: 1500,
+            showConfirmButton: false,
+          });
+  
+          navigate("/");
+        })
+        .catch((error) => {
+          console.log(error);
+          Swal.fire({
+            icon: "error",
+            title: "Google Login Failed!",
+            text: error.message,
+          });
         });
-        navigate("/");
-      })
-      .catch((error) => {
-        console.log(error);
-        Swal.fire({
-          icon: "error",
-          title: "Registration Failed!",
-          text: error.message,
-        });
-      });
-  };
+    };
 
   return (
     <div

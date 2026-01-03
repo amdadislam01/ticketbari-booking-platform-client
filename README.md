@@ -2,7 +2,6 @@
 
 ## Online Ticket Booking Platform (MERN Stack)
 
-
 🔗 **Live Demo:**
 [https://ticketbari-booking-platform-client.vercel.app/](https://ticketbari-booking-platform-client.vercel.app/)
 

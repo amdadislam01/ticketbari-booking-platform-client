@@ -7,6 +7,7 @@
 
 ---
 
+
 ## 📄 Project Summary
 
 **TicketBari** is a full-stack **Online Ticket Booking Platform** built with the **MERN stack**. The platform allows users to discover, book, and manage travel tickets, including **Bus, Train, Launch, and Plane** services.

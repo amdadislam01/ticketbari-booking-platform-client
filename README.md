@@ -42,7 +42,7 @@ Each role has its own dashboard and permissions, making the system scalable and 
 * View booking history
 * Fully responsive design
 
-### 🧑‍💼 Vendor
+### 🧑‍💼 Vendor Manager
 
 * Vendor authentication & authorization
 * Add, update, and manage tickets

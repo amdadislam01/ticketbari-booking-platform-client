@@ -14,7 +14,7 @@
 The system follows **role-based access control** and supports three distinct user roles:
 
 * **User**
-* **Vendor**
+* **Vendor** **Manager**
 * **Admin**
 
 Each role has its own dashboard and permissions, making the system scalable and production-ready.

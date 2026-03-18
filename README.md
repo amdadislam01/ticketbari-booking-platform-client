@@ -1,4 +1,5 @@
-# 🎫 TicketBari
+# 🎫 TicketBar
+
 
 ## Online Ticket Booking Platform (Full Stack)
 
